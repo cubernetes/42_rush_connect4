@@ -25,6 +25,7 @@ CFLAGS += -pedantic
 CFLAGS += -Wconversion
 CFLAGS += -Wunreachable-code
 CFLAGS += -Wshadow
+CFLAGS := -std=c89
 
 CPPFLAGS :=
 CPPFLAGS += -MD

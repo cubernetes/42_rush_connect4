@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 00:24:19 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 00:47:06 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct s_board
 	int					y;
 	int					w;
 	int					h;
-	int					dim; /* TODO: REMOVE */
 }	t_board;
 
 # define SMALL_GAME_OVER \

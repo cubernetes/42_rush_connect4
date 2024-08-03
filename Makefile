@@ -75,8 +75,7 @@ DEPS := $(OBJ:.o=.d)
 # rules
 .DEFAULT_GOAL := all
 
-all:
-	@$(MAKE) libft
+all: libft
 	@$(MAKE) $(NAME)
 
 libft:
@@ -101,8 +100,7 @@ fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) $@
 	$(RM) $(NAME)
 
-re:
-	@$(MAKE) fclean
+re: fclean
 	@$(MAKE) all
 
 # This allows $(NAME) to be run using either an absolute, relative or no path.
@@ -115,12 +113,10 @@ valrun:
 	@printf '\n'
 	@PATH=".$${PATH:+:$${PATH}}" && valgrind --suppressions=nc.supp --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes $(NAME) $(ARGS)
 
-rerun:
-	@$(MAKE) re
+rerun: re
 	@$(MAKE) run
 
-l leakcheck:
-	@$(MAKE) re
+l leakcheck: re
 	@$(MAKE) valrun
 
 # memset can be ignored from nm.
@@ -128,8 +124,7 @@ l leakcheck:
 # malloc, free, rand, srand, and time are from mandatory part
 # noecho, keypad, initscr, cbreak, curs_set and endwin are from ncursesw
 # __* are added by cc
-f forbidden-funcs:
-	@$(MAKE) re
+forbidden-funcs-internal:
 	@printf '\n'
 	@$(NM) -u $(NAME)                  | \
 		grep -v ' memset@'            | \
@@ -155,6 +150,12 @@ f forbidden-funcs:
 			printf '\033[41;30m%s\033[m\n' "You used memset (forbidden)!" || \
 			printf '\033[42;30m%s\033[m\n' "All clear!" \
 		)
+
+f forbidden-funcs: re
+	@$(MAKE) forbidden-funcs-internal
+
+fl forbidden-funcs-leakcheck: leakcheck
+	@$(MAKE) forbidden-funcs-internal
 
 # these targets are not files
 .PHONY: all clean fclean re run rerun leakcheck

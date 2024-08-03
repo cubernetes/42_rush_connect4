@@ -110,7 +110,7 @@ run:
 
 valrun:
 	@echo
-	@PATH=".$${PATH:+:$${PATH}}" && valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes $(NAME) $(ARGS)
+	@PATH=".$${PATH:+:$${PATH}}" && valgrind --suppressions=nc.supp --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes $(NAME) $(ARGS)
 
 rerun:
 	@$(MAKE) re

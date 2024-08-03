@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/03 20:01:15 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 00:33:35 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	outputArray(int *arr, int size)
 {
 	int	i;
 
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 		ft_printf("col[%d] = %d\n", i, arr[i]);
 }
 
@@ -30,7 +30,7 @@ void	zeroedColum(int *colum, int size)
 {
 	int	i;
 
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 		colum[i] = 0;
 }
 
@@ -39,7 +39,7 @@ void	addCurrTimeStampAndLength(t_board *board)
 	t_li	*curr = board->list;
 	board->list_length = 1;
 
-	while(curr && curr->next)
+	while (curr && curr->next)
 	{
 		curr = curr->next;
 		board->list_length++;
@@ -48,7 +48,7 @@ void	addCurrTimeStampAndLength(t_board *board)
 	t_li	*new = ft_malloc(sizeof(t_li));
 	new->next = NULL;
 	new->time = (unsigned int) time(NULL);
-	if(curr == NULL)
+	if (curr == NULL)
 		board->list = new;
 	else
 		curr->next = new;
@@ -61,25 +61,26 @@ void	trimArrZeros(int *arr, int size)
 	int	i;
 
 	zeroedColum(temp, size);
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 	{
-		if(arr[i] != 0)
+		if (arr[i] != 0)
 		{
 			temp[in] = arr[i];
 			in++;
 		}
 	}
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 		arr[i] = temp[i];
 }
 
 void	doubleItUp(int *colum, t_board *board)
 {
-	int	i = 0;
+	int	i;
 
-	while(i +1 < board->dim)
+	i = 0;
+	while (i + 1 < board->dim)
 	{
-		if(colum[i] == colum[i +1])
+		if (colum[i] == colum[i +1])
 		{
 			colum[i] = colum[i] + colum[i];
 			colum[i+1] = 0;
@@ -96,13 +97,13 @@ void	launch_left(t_board* board)
 	int	x;
 	int	y;
 
-	for(x = 0; x < board->dim; x++)
+	for (x = 0; x < board->dim; x++)
 	{
 		in = 0;
 		zeroedColum(colum, board->dim);
-		for(y = 0; y < board->dim; y++)
+		for (y = 0; y < board->dim; y++)
 		{
-			if(board->cells[x][y] != 0)
+			if (board->cells[x][y] != 0)
 			{
 				colum[in] = board->cells[x][y];
 				in++;
@@ -110,7 +111,7 @@ void	launch_left(t_board* board)
 		}
 		doubleItUp(colum, board);
 		// update the grid
-		for(y = 0; y < board->dim; y++)
+		for (y = 0; y < board->dim; y++)
 			board->cells[x][y] = colum[y];
 	}
 }
@@ -122,13 +123,13 @@ void	launch_right(t_board* board)
 	int	x;
 	int	y;
 
-	for(x = 0; x < board->dim; x++)
+	for (x = 0; x < board->dim; x++)
 	{
 		in = 0;
 		zeroedColum(colum, board->dim);
-		for(y = board->dim -1; y >= 0; y--)
+		for (y = board->dim -1; y >= 0; y--)
 		{
-			if(board->cells[x][y] != 0)
+			if (board->cells[x][y] != 0)
 			{
 				colum[in] = board->cells[x][y];
 				in++;
@@ -136,7 +137,7 @@ void	launch_right(t_board* board)
 		}
 		doubleItUp(colum, board);
 		in = 0;
-		for(y = board->dim -1; y >= 0; y--, in++)
+		for (y = board->dim -1; y >= 0; y--, in++)
 			board->cells[x][y] = colum[in];
 	}
 }
@@ -148,13 +149,13 @@ void	launch_up(t_board* board)
 	int	x;
 	int	y;
 
-	for(y = 0; y < board->dim; y++)
+	for (y = 0; y < board->dim; y++)
 	{
 		in = 0;
 		zeroedColum(colum, board->dim);
-		for(x = 0; x < board->dim; x++)
+		for (x = 0; x < board->dim; x++)
 		{
-			if(board->cells[x][y] != 0)
+			if (board->cells[x][y] != 0)
 			{
 				colum[in] = board->cells[x][y];
 				in++;
@@ -162,7 +163,7 @@ void	launch_up(t_board* board)
 		}
 		doubleItUp(colum, board);
 		// update the grid
-		for(x = 0; x < board->dim; x++)
+		for (x = 0; x < board->dim; x++)
 			board->cells[x][y] = colum[x];
 	}
 }
@@ -174,13 +175,13 @@ void	launch_down(t_board* board)
 	int	x;
 	int	y;
 
-	for(y = 0; y < board->dim; y++)
+	for (y = 0; y < board->dim; y++)
 	{
 		in = 0;
 		zeroedColum(colum, board->dim);
-		for(x = board->dim -1; x >= 0; x--)
+		for (x = board->dim -1; x >= 0; x--)
 		{
-			if(board->cells[x][y] != 0)
+			if (board->cells[x][y] != 0)
 			{
 				colum[in] = board->cells[x][y];
 				in++;
@@ -188,7 +189,7 @@ void	launch_down(t_board* board)
 		}
 		doubleItUp(colum, board);
 		in = 0;
-		for(x = board->dim -1; x >= 0; x--, in++)
+		for (x = board->dim -1; x >= 0; x--, in++)
 			board->cells[x][y] = colum[in];
 	}
 }
@@ -198,9 +199,9 @@ void	copyGrid(int **cpy, int **arr, int size)
 	int	x;
 	int	y;
 
-	for(x = 0; x < size; x++)
+	for (x = 0; x < size; x++)
 	{
-		for(y = 0; y < size; y++)
+		for (y = 0; y < size; y++)
 			cpy[x][y] = arr[x][y];
 	}
 }
@@ -210,11 +211,11 @@ bool	gridCompare(int **cpy, int **arr, int size)
 	int	x;
 	int	y;
 
-	for(x = 0; x < size; x++)
+	for (x = 0; x < size; x++)
 	{
-		for(y = 0; y < size; y++)
+		for (y = 0; y < size; y++)
 		{
-			if(cpy[x][y] != arr[x][y])
+			if (cpy[x][y] != arr[x][y])
 				return (false);
 		}
 	}
@@ -228,20 +229,20 @@ bool	launch_arrows(t_board *board, int key)
 	int		**cpy;
 
 	cpy = ft_malloc(sizeof(int *) * (size_t)board->dim);
-	for(i = 0; i < board->dim; i++)
+	for (i = 0; i < board->dim; i++)
 	{
 		cpy[i] = ft_malloc(sizeof(int) * (size_t)board->dim);
 		zeroedColum(cpy[i], board->dim);
 	}
 	copyGrid(cpy, board->cells, board->dim);
 	board->move_failed = false;
-	if(key == KEY_UP || key == 'k')
+	if (key == KEY_UP || key == 'k')
 		launch_up(board);
-	else if(key == KEY_DOWN || key == 'j')
+	else if (key == KEY_DOWN || key == 'j')
 		launch_down(board);
-	else if(key == KEY_RIGHT || key == 'l')
+	else if (key == KEY_RIGHT || key == 'l')
 		launch_right(board);
-	else if(key == KEY_LEFT || key == 'h')
+	else if (key == KEY_LEFT || key == 'h')
 		launch_left(board);
 	else
 		ret = false;
@@ -266,23 +267,23 @@ bool	noMovePossible(t_board *board)
 	int	**temp;
 
 	temp = ft_malloc(sizeof(int *) * (size_t)board->dim);
-	for(i = 0; i < board->dim; i++)
+	for (i = 0; i < board->dim; i++)
 	{
 		temp[i] = ft_malloc(sizeof(int) * (size_t)board->dim);
 		zeroedColum(temp[i], board->dim);
 	}
 	copyGrid(temp, board->cells, board->dim);
 	launch_up(board);
-	if(gridCompare(temp, board->cells, board->dim) == false)
+	if (gridCompare(temp, board->cells, board->dim) == false)
 		return (resetGrid(board, temp), false);
 	launch_down(board);
-	if(gridCompare(temp, board->cells, board->dim) == false)
+	if (gridCompare(temp, board->cells, board->dim) == false)
 		return (resetGrid(board, temp), false);
 	launch_right(board);
-	if(gridCompare(temp, board->cells, board->dim) == false)
+	if (gridCompare(temp, board->cells, board->dim) == false)
 		return (resetGrid(board, temp), false);
 	launch_left(board);
-	if(gridCompare(temp, board->cells, board->dim) == false)
+	if (gridCompare(temp, board->cells, board->dim) == false)
 		return (resetGrid(board, temp), false);
 	return(true);
 }
@@ -499,9 +500,9 @@ void	setZeroAmount(t_board *board)
 	int	j;
 
 	board->zero_amount = 0;
-	for(i = 0; i < board->dim; i++)
+	for (i = 0; i < board->dim; i++)
 	{
-		for(j = 0; j < board->dim; j++)
+		for (j = 0; j < board->dim; j++)
 		{
 			if (board->cells[i][j] == 0)
 				board->zero_amount++;
@@ -534,32 +535,35 @@ t_pos	get_random_zero_pos(t_board *board)
 	return (ret);
 }
 
-t_board	*init_board(int dim, bool pre_fill)
+t_board	*init_board(int width, int height, bool pre_fill)
 {
 	t_board	*board;
 	int		i;
 	int		j;
 	int		v;
 
+	height = width;
 	board = ft_malloc(sizeof(*board));
-	board->dim = dim;
-	board->cells = ft_malloc(sizeof(*board->cells) * (size_t)board->dim);
+	board->dim = width;
+	board->width = width;
+	board->height = height;
+	board->cells = ft_malloc(sizeof(*board->cells) * (size_t)board->height);
 	i = -1;
 	v = 1;
-	while (++i < board->dim)
+	while (++i < board->height)
 	{
 		board->cells[i] = ft_malloc(sizeof(*board->cells[i])
-				* (size_t)board->dim);
+				* (size_t)board->width);
 		j = -1;
-		while (++j < board->dim)
+		while (++j < board->width)
 		{
 			if (pre_fill)
 			{
-				if (board->dim == 4)
+				if (board->width == 4)
 					board->cells[i][j] = 32;
-				else if (board->dim == 5)
+				else if (board->width == 5)
 					board->cells[i][j] = 16;
-				else if (board->dim == 6)
+				else if (board->width == 6)
 					board->cells[i][j] = 8;
 				else
 					board->cells[i][j] = 4096;
@@ -580,9 +584,9 @@ t_board	*init_board(int dim, bool pre_fill)
 	board->list_length = 1;
 	board->first_game_over = true;
 	board->div = 1;
-	board->prev_cells = ft_malloc(sizeof(int *) * (size_t)board->dim);
-	for (i = 0; i < board->dim; i++)
-		board->prev_cells[i] = ft_malloc(sizeof(int) * (size_t)board->dim);
+	board->prev_cells = ft_malloc(sizeof(int *) * (size_t)board->height);
+	for (i = 0; i < board->height; i++)
+		board->prev_cells[i] = ft_malloc(sizeof(int) * (size_t)board->width);
 	board->selected = false;
 	return (board);
 }
@@ -632,8 +636,7 @@ t_li	*update_list(t_board *board)
 	return (board->list);
 }
 
-
-/* ################## STARRRR PRINTING ############ */
+/* ################## BEGIN PRINTING ############ */
 void	print_border_top(int x, int y, int cell_dim)
 {
 	int	d;
@@ -806,21 +809,41 @@ int	print_number_wrapper(t_board *board, int i, int j, int cell_dim)
 	int	y;
 	int	x;
 
-	y = board->y + i * cell_dim + board->h / 2 - board->dim * cell_dim / 2;
-	x = board->x + j * FONT_ASPECT_RATIO * cell_dim + board->w / 2 - board->dim * cell_dim * FONT_ASPECT_RATIO / 2;
+	y = board->y + i * cell_dim + board->h / 2 - board->height * cell_dim / 2;
+	x = board->x + j * FONT_ASPECT_RATIO * cell_dim + board->w / 2 - board->width * cell_dim * FONT_ASPECT_RATIO / 2;
 	ret = print_number(y, x, cell_dim, board->cells[i][j]);
 	return (ret);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void	print_border_wrapper(t_board *board, int i, int j, int cell_dim, int color)
 {
 	int	y;
 	int	x;
 
-	y = board->y + i * cell_dim + board->h / 2 - board->dim * cell_dim / 2;
-	x = board->x + j * FONT_ASPECT_RATIO * cell_dim + board->w / 2 - board->dim * cell_dim * FONT_ASPECT_RATIO / 2;
+	y = board->y + i * cell_dim + board->h / 2 - board->height * cell_dim / 2;
+	x = board->x + j * FONT_ASPECT_RATIO * cell_dim + board->w / 2 - board->width * cell_dim * FONT_ASPECT_RATIO / 2;
 	print_border(y, x, cell_dim, color);
 }
+
+
+
+
+
+
+
+
+
 
 void	print_tty_too_small(void)
 {
@@ -837,24 +860,23 @@ void	print_borders(t_board *board, int cell_dim)
 	if (board->move_failed)
 	{
 		i = -1;
-		while (++i < board->dim)
+		while (++i < board->height)
 		{
 			j = -1;
-			while (++j < board->dim)
+			while (++j < board->width)
 				print_border_wrapper(board, i, j, cell_dim, 17);
 		}
 		refresh();
 		ft_sleep(0.1);
 	}
-
 	i = -1;
-	while (++i < board->dim)
+	while (++i < board->height)
 	{
 		j = -1;
-		while (++j < board->dim)
-			print_border_wrapper(board, i, j, cell_dim, board->selected ? 18 : 1);
+		while (++j < board->width)
+			print_border_wrapper(board, i, j, cell_dim,
+				board->selected ? 18 : 1);
 	}
-
 }
 
 int	print_numbers(t_board *board, int cell_dim)
@@ -864,10 +886,10 @@ int	print_numbers(t_board *board, int cell_dim)
 	int	new_cell_value;
 
 	i = -1;
-	while (++i < board->dim)
+	while (++i < board->height)
 	{
 		j = -1;
-		while (++j < board->dim)
+		while (++j < board->width)
 		{
 			if (board->new_cell.x == i && board->new_cell.y == j)
 			{
@@ -994,15 +1016,35 @@ int	print_board(t_board *board, int x, int y, int w, int h, bool show_scores)
 	board->w = w;
 	board->h = h;
 	if (board->h * FONT_ASPECT_RATIO > board->w)
-		cell_dim = board->w / (FONT_ASPECT_RATIO * board->dim);
+		cell_dim = board->w / (FONT_ASPECT_RATIO * board->width);
 	else
-		cell_dim = board->h / board->dim;
+		cell_dim = board->h / board->height;
 	print_borders(board, cell_dim);
-	if (show_scores)
-		print_scores(board);
-	return (print_numbers(board, cell_dim));
+	/* if (show_scores) */
+		/* print_scores(board); */
+	return (EXIT_SUCCESS);
+	/* return (print_numbers(board, cell_dim)); */
 }
-/* ################### STOP PRINTING ############### */
+/* ################### END PRINTING ############### */
+
+int	handle_input(t_board *board, int key)
+{
+	MEVENT	mouse_event;
+
+	if (key == KEY_MOUSE)
+	{
+		if (getmouse(&mouse_event) == OK)
+		{
+			mvprintw(0, 0, "(%s, %s)\n", ft_itoa(mouse_event.x),
+				ft_itoa(mouse_event.y));
+		}
+	}
+	else
+	{
+		mvprintw(0, 0, "%s\n", ft_itoa(key));
+	}
+	return (true);
+}
 
 void	game_loop(void)
 {
@@ -1012,36 +1054,39 @@ void	game_loop(void)
 	t_pos	pos1;
 	t_pos	pos2;
 
-	while (1)
+	board = init_board(7, 8, false);
+	print_board(board, 0, 9, COLS, LINES - 9, false);
+	mousemask(ALL_MOUSE_EVENTS, NULL);
+	key = getch();
+	while (key)
 	{
-		board = init_board(5, false);
-		print_board(board, 0, 9, COLS, LINES - 9, true);
-		key = getch();
-		return ;
-		while (key)
+		if (key == 'q' || key == '\x1b' || key == '\x04')
+			break ;
+		else if (key == KEY_RESIZE)
 		{
-			if (key == 'q' || key == 27)
-				break ;
-			else if (key == KEY_RESIZE)
-			{
-				board->move_failed = false;
-				clear();
-			}
-			else if (false)
-			{
-			}
-			print_board(board, 0, 9, COLS, LINES - 9, true);
-			if (FALSE)
-			{
-				/* print_game_over(board, key); */
-			}
-			refresh();
-			refresh();
-			key = getch();
+			board->move_failed = false;
+			clear();
 		}
+		else if (handle_input(board, key))
+		{
+			/* whatever */
+		}
+		else
+		{
+			/* nothing happened */
+		}
+		print_board(board, 0, 9, COLS, LINES - 9, false);
+		if (FALSE)
+		{
+			/* print_game_over(board, key); */
+		}
+		refresh();
+		refresh();
+		key = getch();
 	}
 }
 
+/* TODO: free as often as possible */
 int	main(int argc, char *argv[], char *envp[])
 {
 	init(envp);

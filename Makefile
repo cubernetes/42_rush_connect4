@@ -130,13 +130,13 @@ forbidden-funcs-internal:
 	@printf '\n'
 	@$(NM) -u $(NAME)      | \
 		grep -v ' memset@'    | \
-		grep -v ' time@'         | \
-		grep -v ' rand@'         | \
-		grep -v ' srand@'        | \
 		grep -v ' read@'         | \
-		grep -v ' free@'         | \
 		grep -v ' write@'        | \
-		grep -v ' malloc@'       | \
+		grep -v ' time@'             | \
+		grep -v ' rand@'             | \
+		grep -v ' srand@'            | \
+		grep -v ' free@'             | \
+		grep -v ' malloc@'           | \
 		grep -v ' noecho@'          | \
 		grep -v ' keypad@'          | \
 		grep -v ' cbreak@'          | \
@@ -148,8 +148,10 @@ forbidden-funcs-internal:
 		grep -v ' curs_set@'        | \
 		grep -v ' wattr_on@'        | \
 		grep -v ' mvprintw@'        | \
+		grep -v ' getmouse@'        | \
 		grep -v ' wattr_off@'       | \
 		grep -v ' init_pair@'       | \
+		grep -v ' mousemask@'       | \
 		grep -v ' init_color@'      | \
 		grep -v ' start_color@'     | \
 		grep -v ' set_escdelay@'    | \

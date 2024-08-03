@@ -36,6 +36,7 @@ LDFLAGS :=
 LDFLAGS += -L$(LIBFT_DIR)
 
 LDLIBS :=
+LDLIBS += -lncursesw
 LDLIBS += -l$(LIFBT_LIB)
 
 # DEBUG=1 make re # include debugging information in the binary

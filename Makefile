@@ -15,6 +15,7 @@ LIFBT_LIB := $(patsubst lib%,%,$(patsubst %.a,%,$(LIBFT_FILE)))
 CC := cc
 RM := /bin/rm -f
 MKDIR := /bin/mkdir -p
+NM := nm
 
 # flags
 CFLAGS := -O2
@@ -107,11 +108,11 @@ re:
 # This allows $(NAME) to be run using either an absolute, relative or no path.
 # You can pass arguments like this: make run ARGS="hello ' to this world ! ' ."
 run:
-	@echo
+	@printf '\n'
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 
 valrun:
-	@echo
+	@printf '\n'
 	@PATH=".$${PATH:+:$${PATH}}" && valgrind --suppressions=nc.supp --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes $(NAME) $(ARGS)
 
 rerun:
@@ -121,6 +122,39 @@ rerun:
 l leakcheck:
 	@$(MAKE) re
 	@$(MAKE) valrun
+
+# memset can be ignored from nm.
+# write and read are from libft.
+# malloc, free, rand, srand, and time are from mandatory part
+# noecho, keypad, initscr, cbreak, curs_set and endwin are from ncursesw
+# __* are added by cc
+f forbidden-funcs:
+	@$(MAKE) re
+	@printf '\n'
+	@$(NM) -u $(NAME)                  | \
+		grep -v ' memset@'            | \
+		grep -v ' write@'             | \
+		grep -v ' read@'              | \
+		grep -v ' malloc@'            | \
+		grep -v ' free@'              | \
+		grep -v ' rand@'              | \
+		grep -v ' srand@'             | \
+		grep -v ' time@'              | \
+		grep -v ' noecho@'            | \
+		grep -v ' keypad@'            | \
+		grep -v ' initscr@'           | \
+		grep -v ' endwin@'            | \
+		grep -v ' cbreak@'            | \
+		grep -v ' curs_set@'          | \
+		grep -v ' __gmon_start__'     | \
+		grep -v ' __libc_start_main@' | \
+		grep -v ' __errno_location@' && \
+		printf '\033[41;30m%s\033[m\n' "There are forbidden functions!" || \
+		( \
+			grep --include='*.[hc]' -R 'memset' | grep -v ft_memset && \
+			printf '\033[41;30m%s\033[m\n' "You used memset (forbidden)!" || \
+			printf '\033[42;30m%s\033[m\n' "All clear!" \
+		)
 
 # these targets are not files
 .PHONY: all clean fclean re run rerun leakcheck

@@ -62,9 +62,9 @@ endif
 SRC :=
 
 vpath %.c src
-SRC += timo-main.c
 SRC += main.c
 SRC += gameplay.c
+SRC += nc_gameplay.c
 
 # objects
 OBJ := $(SRC:.c=.o)

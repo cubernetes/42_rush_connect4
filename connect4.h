@@ -6,13 +6,14 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 00:47:06 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 01:37:05 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONNECT4_H
 # define CONNECT4_H	1
 
+/* defines */
 # define FALSE 0
 # define TRUE 1
 # define LOSING 0
@@ -29,6 +30,7 @@
 
 # define BRIGHT 1000
 
+/* structures */
 typedef struct s_li
 {
 	unsigned int	time;
@@ -69,6 +71,12 @@ typedef struct s_board
 	int					h;
 }	t_board;
 
+/* prototypes */
+void	init(char *envp[]);
+void	finish(void);
+void	nc_gameplay(void);
+
+/* fonts */
 # define SMALL_GAME_OVER \
 "╔═╗╔═╗╔╦╗╔═╗  ╔═╗╦  ╦╔═╗╦═╗\n"\
 "║ ╦╠═╣║║║║╣   ║ ║╚╗╔╝║╣ ╠╦╝\n"\

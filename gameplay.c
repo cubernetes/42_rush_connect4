@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 01:04:03 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 01:26:49 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,13 @@
 
 void print_board(int board[HEIGTH][WIDTH])
 {
+	int	i;
+	int	j;
+
 	ft_printf("current state of the board:\n");
-	for(int i = 0; i < HEIGTH; i++)
+	for (i = 0; i < HEIGTH; i++)
 	{
-		for (int j = 0; j < WIDTH; j++)
+		for (j = 0; j < WIDTH; j++)
 			ft_printf(" %i ", board[i][j]);			
 		ft_printf("\n");
 	}
@@ -40,13 +43,16 @@ void print_board(int board[HEIGTH][WIDTH])
 int check_secondary_diagonal(int board[HEIGTH][WIDTH], int player)
 {
 	int consec;
+	int	i;
+	int	j;
+	int	k;
 
-	for(int i = 0; i < HEIGTH - 3; i++)
+	for (i = 0; i < HEIGTH - 3; i++)
 	{
-		for (int j = WIDTH - 1; j > 2; j--)
+		for (j = WIDTH - 1; j > 2; j--)
 		{
 			consec = 0;
-			for (int k = 0; k < 4; k++)
+			for (k = 0; k < 4; k++)
 			{
 				if (board[i + k][j - k] == player)
 					consec++;
@@ -65,13 +71,16 @@ int check_secondary_diagonal(int board[HEIGTH][WIDTH], int player)
 int check_primary_diagonal(int board[HEIGTH][WIDTH], int player)
 {
 	int consec;
+	int	i;
+	int	j;
+	int	k;
 
-	for(int i = 0; i < HEIGTH - 3; i++)
+	for (i = 0; i < HEIGTH - 3; i++)
 	{
-		for (int j = 0; j < WIDTH - 3; j++)
+		for (j = 0; j < WIDTH - 3; j++)
 		{
 			consec = 0;
-			for (int k = 0; k < 4; k++)
+			for (k = 0; k < 4; k++)
 			{
 				if (board[i + k][j + k] == player)
 					consec++;
@@ -90,11 +99,13 @@ int check_primary_diagonal(int board[HEIGTH][WIDTH], int player)
 int check_horizontal(int board[HEIGTH][WIDTH], int player)
 {
 	int consec;
-	
-	for(int i = 0; i < HEIGTH; i++)
+	int	i;
+	int	j;
+
+	for (i = 0; i < HEIGTH; i++)
 	{
 		consec = 0;
-		for (int j = 1; j < WIDTH; j++)
+		for (j = 1; j < WIDTH; j++)
 		{
 			if (board[i][j] == player && board[i][j - 1] == player)
 				consec++;
@@ -107,15 +118,17 @@ int check_horizontal(int board[HEIGTH][WIDTH], int player)
 	}
 	return (CONTINUE);
 }
+int	i;
 
 int check_vertical(int board[HEIGTH][WIDTH], int player)
 {
 	int consec;
-	
-	for(int i = 0; i < WIDTH; i++)
+	int	j;
+
+	for (i = 0; i < WIDTH; i++)
 	{
 		consec = 0;
-		for (int j = 1; j < HEIGTH; j++)
+		for (j = 1; j < HEIGTH; j++)
 		{
 			if (board[j][i] == player && board[j - 1][i] == player)
 				consec++;
@@ -141,9 +154,12 @@ int check_win_states(int board[HEIGTH][WIDTH], int player)
 
 int is_full(int board[HEIGTH][WIDTH])
 {
-	for(int i = 0; i < HEIGTH; i++)
+	int	i;
+	int	j;
+
+	for (i = 0; i < HEIGTH; i++)
 	{
-		for (int j = 0; j < WIDTH; j++)
+		for (j = 0; j < WIDTH; j++)
 		{
 			if (board[i][j] == 0)
 				return (EXIT_SUCCESS);			

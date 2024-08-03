@@ -6,26 +6,30 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 01:11:04 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 01:36:33 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "connect4.h"
 #include "libft.h"
 
 #include <stdlib.h>
-#include <unistd.h>
 
-
-int	main(void)
+/* TODO: free as often as possible */
+int	main(int argc, char *argv[], char *envp[])
 {
-	// char	*line;
-
 	set_allocator(gc_malloc);
 	gc_set_context("GAME");
 
-	gameplay();
-
+	if (TRUE)
+		gameplay();
+	else
+	{
+		init(envp);
+		nc_gameplay();
+		finish();
+	}
 
 	gc_free_all();
-	return (0);
+	return (EXIT_SUCCESS);
 }

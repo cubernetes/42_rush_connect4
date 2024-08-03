@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   timo-main.c                                        :+:      :+:    :+:   */
+/*   nc_gameplay.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 01:04:28 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 01:37:49 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,10 +215,10 @@ bool	gridCompare(int **cpy, int **arr, int height, int width)
 		for (y = 0; y < width; y++)
 		{
 			if (cpy[x][y] != arr[x][y])
-				return (false);
+				return (FALSE);
 		}
 	}
-	return (true);
+	return (TRUE);
 }
 
 bool	launch_arrows(t_board *board, int key)
@@ -234,7 +234,7 @@ bool	launch_arrows(t_board *board, int key)
 		zeroedColum(cpy[i], board->width);
 	}
 	copyGrid(cpy, board->cells, board->height, board->width);
-	board->move_failed = false;
+	board->move_failed = FALSE;
 	if (key == KEY_UP || key == 'k')
 		launch_up(board);
 	else if (key == KEY_DOWN || key == 'j')
@@ -244,14 +244,14 @@ bool	launch_arrows(t_board *board, int key)
 	else if (key == KEY_LEFT || key == 'h')
 		launch_left(board);
 	else
-		ret = false;
-	if (gridCompare(cpy, board->cells, board->height, board->width) == true)
+		ret = FALSE;
+	if (gridCompare(cpy, board->cells, board->height, board->width) == TRUE)
 	{
-		ret = false;
-		board->move_failed = true;
+		ret = FALSE;
+		board->move_failed = TRUE;
 	}
 	else
-		ret = true;
+		ret = TRUE;
 	return (ret);
 }
 
@@ -273,18 +273,18 @@ bool	noMovePossible(t_board *board)
 	}
 	copyGrid(temp, board->cells, board->height, board->width);
 	launch_up(board);
-	if (gridCompare(temp, board->cells, board->height, board->width) == false)
-		return (resetGrid(board, temp), false);
+	if (gridCompare(temp, board->cells, board->height, board->width) == FALSE)
+		return (resetGrid(board, temp), FALSE);
 	launch_down(board);
-	if (gridCompare(temp, board->cells, board->height, board->width) == false)
-		return (resetGrid(board, temp), false);
+	if (gridCompare(temp, board->cells, board->height, board->width) == FALSE)
+		return (resetGrid(board, temp), FALSE);
 	launch_right(board);
-	if (gridCompare(temp, board->cells, board->height, board->width) == false)
-		return (resetGrid(board, temp), false);
+	if (gridCompare(temp, board->cells, board->height, board->width) == FALSE)
+		return (resetGrid(board, temp), FALSE);
 	launch_left(board);
-	if (gridCompare(temp, board->cells, board->height, board->width) == false)
-		return (resetGrid(board, temp), false);
-	return (true);
+	if (gridCompare(temp, board->cells, board->height, board->width) == FALSE)
+		return (resetGrid(board, temp), FALSE);
+	return (TRUE);
 }
 
 void	no_op(void)
@@ -433,8 +433,6 @@ void	ncurses_init(void)
 
 void	init(char *envp[])
 {
-	set_allocator(gc_malloc);
-	gc_set_context("GAME");
 	ft_setenv(envp, "TERM", "xterm-256color");
 	setlocale(LC_CTYPE, "");
 	ncurses_init();
@@ -454,7 +452,6 @@ void	init(char *envp[])
 
 void	finish(void)
 {
-	gc_free_all();
 	endwin();
 }
 
@@ -572,7 +569,7 @@ t_board	*init_board(int height, int width, bool pre_fill)
 	}
 	board->one_sec = get_one_sec();
 	board->new_cell = (t_pos){.x = -1, .y = -1};
-	board->move_failed = false;
+	board->move_failed = FALSE;
 	board->x = -1;
 	board->y = -1;
 	board->w = -1;
@@ -580,12 +577,12 @@ t_board	*init_board(int height, int width, bool pre_fill)
 	board->win_status = LOSING;
 	board->list = NULL;
 	board->list_length = 1;
-	board->first_game_over = true;
+	board->first_game_over = TRUE;
 	board->div = 1;
 	board->prev_cells = ft_malloc(sizeof(int *) * (size_t)board->height);
 	for (i = 0; i < board->height; i++)
 		board->prev_cells[i] = ft_malloc(sizeof(int) * (size_t)board->width);
-	board->selected = false;
+	board->selected = FALSE;
 	return (board);
 }
 
@@ -986,7 +983,7 @@ void	print_scores(t_board *board)
 		attroff(COLOR_PAIR(16));
 }
 
-int	print_board(t_board *board, int x, int y, int w, int h, bool show_scores, int *cell_dim)
+int	print_nc_board(t_board *board, int x, int y, int w, int h, bool show_scores, int *cell_dim)
 {
 	board->x = x;
 	board->y = y;
@@ -1025,10 +1022,10 @@ int	handle_input(t_board *board, int key, int cell_dim)
 		board->cells[0][i] = 16;
 	}
 	++i;
-	return (true);
+	return (TRUE);
 }
 
-void	game_loop(void)
+void	nc_gameplay(void)
 {
 	t_board	*board;
 	int		key;
@@ -1037,8 +1034,8 @@ void	game_loop(void)
 	t_pos	pos2;
 	int		cell_dim;
 
-	board = init_board(5, 8, false);
-	print_board(board, 0, 9, COLS, LINES - 9, false, &cell_dim);
+	board = init_board(5, 8, FALSE);
+	print_nc_board(board, 0, 9, COLS, LINES - 9, FALSE, &cell_dim);
 	mousemask(ALL_MOUSE_EVENTS, NULL);
 	key = getch();
 	while (key)
@@ -1047,7 +1044,7 @@ void	game_loop(void)
 			break ;
 		else if (key == KEY_RESIZE)
 		{
-			board->move_failed = false;
+			board->move_failed = FALSE;
 			clear();
 		}
 		else if (handle_input(board, key, cell_dim))
@@ -1058,7 +1055,7 @@ void	game_loop(void)
 		{
 			/* nothing happened */
 		}
-		print_board(board, 0, 9, COLS, LINES - 9, false, &cell_dim);
+		print_nc_board(board, 0, 9, COLS, LINES - 9, FALSE, &cell_dim);
 		if (FALSE)
 		{
 			/* print_game_over(board, key); */
@@ -1067,13 +1064,4 @@ void	game_loop(void)
 		refresh();
 		key = getch();
 	}
-}
-
-/* TODO: free as often as possible */
-int	main(int argc, char *argv[], char *envp[])
-{
-	init(envp);
-	game_loop();
-	finish();
-	return (EXIT_SUCCESS);
 }

@@ -63,6 +63,8 @@ SRC :=
 
 vpath %.c src
 SRC += timo-main.c
+SRC += main.c
+SRC += gameplay.c
 
 # objects
 OBJ := $(SRC:.c=.o)

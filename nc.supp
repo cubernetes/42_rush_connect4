@@ -1,0 +1,56 @@
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:_nc_*
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:initscr
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:*printw
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:*refresh*
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:*getch*
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:tsearch
+    ...
+}
+{
+  <ncurses>
+    Memcheck:Leak
+    match-leak-kinds: all
+    ...
+    fun:start_color_sp
+    ...
+}

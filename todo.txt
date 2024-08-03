@@ -1,0 +1,1 @@
+- check for forbidden functions using `nm -u ./connect4`

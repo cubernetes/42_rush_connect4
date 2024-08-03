@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 01:26:49 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 01:48:55 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 #define AI_TURN 2
 #define WIN 0
 #define CONTINUE 1
-#define PLAYER_WINS 1
-#define AI_WINS 2
+#define PLAYER_WINS 2
+#define AI_WINS 3
 
 
 void print_board(int board[HEIGTH][WIDTH])
@@ -195,7 +195,7 @@ int player_turn(int board[HEIGTH][WIDTH], int player)
 	if (!input)
 	{
 		ft_printf("Bye!\n");
-		exit(EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	}
 	ft_printf("The move is:\n");
 	ft_printf("%s", input);
@@ -228,12 +228,16 @@ int gameplay(void)
 		// get player move
 		ft_printf("Player One's turn:\n");
 		move = player_turn(board, PLAYER_TURN);
+		if (move == EXIT_SUCCESS)
+			return (EXIT_SUCCESS);
 		print_board(board);
 		if (!check_win_states(board, PLAYER_TURN))
 			return (PLAYER_WINS);
 		ft_printf("Player Two's turn:\n");
 		// get ai turn (or player 2)
 		move = player_turn(board, AI_TURN);
+		if (move == EXIT_SUCCESS)
+			return (EXIT_SUCCESS);
 		print_board(board);	
 		if (!check_win_states(board, AI_TURN))
 			return (AI_WINS);

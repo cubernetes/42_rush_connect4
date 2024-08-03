@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 01:04:28 by tischmid          #+#    #+#             */
-/*   Updated: 2024/07/05 01:04:29 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/03 18:53:37 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ void	*gc_malloc(size_t size)
 	ptr = malloc(size);
 	if (!ptr)
 	{
-		ft_printf("\033[41;30mft_malloc: %s\033[m\n\033[31mCallstack "
-			"(reverse):\033[m\n", strerror(errno));
+		/* TODO: strerror is also not allowed */
+		/* ft_printf("\033[41;30mft_malloc: %s\033[m\n\033[31mCallstack " */
+			/* "(reverse):\033[m\n", strerror(errno)); */
 		print_callstack();
-		exit(EXIT_FAILURE);
+		/* TODO: Hehe, exit is not allowed *sad noise* */
+		/* exit(EXIT_FAILURE); */
 	}
 	(void)gc_add(ptr);
 	return (ptr);

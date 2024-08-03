@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/03 18:13:30 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/03 18:53:56 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,14 @@ void	init(char *envp[])
 	set_allocator(gc_malloc);
 	gc_set_context("GAME");
 	ft_setenv(envp, "TERM", "xterm-256color");
-	setlocale(LC_ALL, ""); /* forbidden function */
+	/* setlocale(LC_ALL, ""); */ /* forbidden function */
 	initscr();
 	keypad(stdscr, TRUE);
 	noecho();
 	cbreak();
 	curs_set(0);
+	start_color();
+	set_escdelay(0);
 }
 
 void	finish(void)

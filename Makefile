@@ -119,36 +119,39 @@ rerun: re
 l leakcheck: re
 	@$(MAKE) valrun
 
-# memset can be ignored from nm.
-# write and read are from libft.
-# malloc, free, rand, srand, and time are from mandatory part
-# noecho, keypad, initscr, cbreak, curs_set and endwin are from ncursesw
-# __* are added by cc
+# - memset can be ignored from nm.
+# - write and read are from libft.
+# - malloc, free, rand, srand, time are from mandatory part
+# - noecho, keypad, initscr, cbreak, curs_set, endwin, start_color, set_escdelay
+#   are from ncursesw
+# - __* are added by cc
 forbidden-funcs-internal:
 	@printf '\n'
-	@$(NM) -u $(NAME)                  | \
-		grep -v ' memset@'            | \
-		grep -v ' write@'             | \
-		grep -v ' read@'              | \
-		grep -v ' malloc@'            | \
-		grep -v ' free@'              | \
-		grep -v ' rand@'              | \
-		grep -v ' srand@'             | \
-		grep -v ' time@'              | \
-		grep -v ' noecho@'            | \
-		grep -v ' keypad@'            | \
-		grep -v ' initscr@'           | \
-		grep -v ' endwin@'            | \
-		grep -v ' cbreak@'            | \
-		grep -v ' curs_set@'          | \
-		grep -v ' __gmon_start__'     | \
-		grep -v ' __libc_start_main@' | \
-		grep -v ' __errno_location@' && \
+	@$(NM) -u $(NAME)      | \
+		grep -v ' memset@'    | \
+		grep -v ' time@'         | \
+		grep -v ' rand@'         | \
+		grep -v ' srand@'        | \
+		grep -v ' read@'         | \
+		grep -v ' free@'         | \
+		grep -v ' write@'        | \
+		grep -v ' malloc@'       | \
+		grep -v ' noecho@'          | \
+		grep -v ' keypad@'          | \
+		grep -v ' cbreak@'          | \
+		grep -v ' endwin@'          | \
+		grep -v ' initscr@'         | \
+		grep -v ' curs_set@'        | \
+		grep -v ' start_color@'     | \
+		grep -v ' set_escdelay@'    | \
+		grep -v ' __gmon_start__'      | \
+		grep -v ' __libc_start_main@'  | \
+		grep -v ' __errno_location@'   && \
 		printf '\033[41;30m%s\033[m\n' "There are forbidden functions!" || \
 		( \
 			grep --include='*.[hc]' -R 'memset' | grep -v ft_memset && \
 			printf '\033[41;30m%s\033[m\n' "You used memset (forbidden)!" || \
-			printf '\033[42;30m%s\033[m\n' "All clear!" \
+			printf '\033[42;30m%s\033[m\n' "No forbidden functions!" \
 		)
 
 f forbidden-funcs: re

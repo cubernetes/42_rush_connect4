@@ -1,0 +1,17 @@
+# build artefacts
+connect4
+a.out
+
+# objects
+*.o
+obj/
+
+# make dependencies
+*.d
+
+# libraries
+*.a
+
+# clangd stuff
+.cache/
+compile_commands.json

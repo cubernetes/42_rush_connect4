@@ -118,7 +118,7 @@ rerun:
 	@$(MAKE) re
 	@$(MAKE) run
 
-leakcheck:
+l leakcheck:
 	@$(MAKE) re
 	@$(MAKE) valrun
 

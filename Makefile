@@ -61,7 +61,7 @@ endif
 SRC :=
 
 vpath %.c src
-SRC += main.c
+SRC += timo-main.c
 
 # objects
 OBJ := $(SRC:.c=.o)

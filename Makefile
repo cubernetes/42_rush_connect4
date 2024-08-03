@@ -122,8 +122,9 @@ l leakcheck: re
 # - memset can be ignored from nm.
 # - write and read are from libft.
 # - malloc, free, rand, srand, time are from mandatory part
-# - noecho, keypad, initscr, cbreak, curs_set, endwin, start_color, set_escdelay
-#   are from ncursesw
+# - noecho, keypad, initscr, ..., set_escdelay are from ncursesw
+# - setlocale is technically forbidden since it's not from ncurses*, but
+#   there's otherwise no way to make UTF8 work! so it's needed by us.
 # - __* are added by cc
 forbidden-funcs-internal:
 	@printf '\n'
@@ -140,13 +141,22 @@ forbidden-funcs-internal:
 		grep -v ' keypad@'          | \
 		grep -v ' cbreak@'          | \
 		grep -v ' endwin@'          | \
+		grep -v ' wclear@'          | \
+		grep -v ' wgetch@'          | \
 		grep -v ' initscr@'         | \
+		grep -v ' wrefresh@'        | \
 		grep -v ' curs_set@'        | \
+		grep -v ' wattr_on@'        | \
+		grep -v ' mvprintw@'        | \
+		grep -v ' wattr_off@'       | \
+		grep -v ' init_pair@'       | \
+		grep -v ' init_color@'      | \
 		grep -v ' start_color@'     | \
 		grep -v ' set_escdelay@'    | \
-		grep -v ' __gmon_start__'      | \
-		grep -v ' __libc_start_main@'  | \
-		grep -v ' __errno_location@'   && \
+		grep -v ' setlocale@'          | \
+		grep -v ' __gmon_start__'         | \
+		grep -v ' __errno_location@'      | \
+		grep -v ' __libc_start_main@'     && \
 		printf '\033[41;30m%s\033[m\n' "There are forbidden functions!" || \
 		( \
 			grep --include='*.[hc]' -R 'memset' | grep -v ft_memset && \

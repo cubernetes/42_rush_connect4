@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 14:30:17 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:54:31 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "libft.h"
 
 /* TODO: make sure <curses.h> is NOT included */
-#include <locale.h> /* forbidden header */
+#include <locale.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <time.h>
@@ -129,20 +130,20 @@ void	finish(void)
 	endwin();
 }
 
-void	make_move(t_board *board, int column, int who)
+void	make_move(int **cells, int heigth, int width, int column, int who)
 {
 	int	row;
 
-	if (column >= board->width || column < 0)
+	if (column >= width || column < 0)
 		return ;
-	row = board->heigth - 1;
-	while (row > 0 && board->cells[row][column] != 0)
+	row = heigth - 1;
+	while (row > 0 && cells[row][column] != 0)
 		--row;
-	if (board->cells[row][column] == 0)
-		board->cells[row][column] = who;
+	if (cells[row][column] == 0)
+		cells[row][column] = who;
 }
 
-int	handle_input(t_board *board, int key, int cell_dim)
+int	handle_input(t_board *board, int key, int cell_dim, int parity)
 {
 	MEVENT		mouse_event;
 	int			column;
@@ -157,53 +158,56 @@ int	handle_input(t_board *board, int key, int cell_dim)
 					- (board->x + board->w / 2
 						- board->width * cell_dim * FONT_ASPECT_RATIO / 2))
 				/ (FONT_ASPECT_RATIO * cell_dim);
-			make_move(board, column, PLAYER_MOVE);
+			make_move(board->cells, board->heigth, board->width, column, parity ? PLAYER1 : PLAYER2);
 		}
 	}
 	else
 	{
 		/* currently, only mouse is supported. */
 		/* I know, kinda ironic given this is a ncurses program */
+		/* if (key >= '0' && key <= '9') */
+			/* make_move(board->cells, board->heigth, board->width, key - '0', PLAYER_MOVE); */
 	}
 	return (TRUE);
 }
 
-int	take_turn(t_board *board, int cell_dim, int *ask_for_input)
+int	take_turn(t_board *board, int cell_dim, int *ask_for_input, int parity)
 {
 	int		key;
 
 	if (*ask_for_input)
 	{
 		key = getch();
-		if (!key || key == 'q' || key == '\x1b' || key == '\x04')
+		if (!key || key == 'q' || key == '\x1b' || key == '\x04' || key == -1)
 			return (FALSE);
-		else if (key == KEY_RESIZE)
+		else if (key == KEY_RESIZE || key == '\n')
 		{
 			board->move_failed = FALSE;
 			clear();
 			*ask_for_input = !*ask_for_input;
 			return (TRUE);
 		}
-		handle_input(board, key, cell_dim);
+		handle_input(board, key, cell_dim, parity);
 	}
 	else
-		ai_move(board);
+		ai_move(board, parity);
 	return (TRUE);
 }
 
-/* TODO: Implement */
 int	random_boolean(void)
 {
-	return (TRUE);
+	srand((unsigned int)time(NULL));
+	return (rand() % 2);
 }
 
 void	nc_gameplay(t_board *board, int no_ai)
 {
 	int		cell_dim;
 	int		ask_for_input;
+	int		parity;
 
+	parity = 0;
 	ask_for_input = random_boolean();
-	(void)no_ai;
 	board = init_board(board->heigth, board->width, FALSE);
 	while (1)
 	{
@@ -212,12 +216,13 @@ void	nc_gameplay(t_board *board, int no_ai)
 		refresh();
 		if (no_ai)
 			ask_for_input = TRUE;
-		if (!take_turn(board, cell_dim, &ask_for_input))
+		if (!take_turn(board, cell_dim, &ask_for_input, parity))
 			break ;
 		if (FALSE)
 		{
 			/* print_game_over(board, key); */
 		}
 		ask_for_input = !ask_for_input;
+		parity = (parity + 1) & 1;
 	}
 }

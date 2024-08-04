@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 21:28:49 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 21:41:45 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,20 @@
 # define BOX_DRAWING_BOTTOM_LEFT "+"
 # define BOX_DRAWING_BOTTOM_RIGHT "+"
 
-# define AI_MOVE 16
-# define PLAYER_MOVE 8
+# define PLAYER1 16
+# define PLAYER2 8
 
 # define BRIGHT 1000
 
-# define MAX_ITER 1000
+# define MAX_ITER 10
+
+#define PLAYER_TURN 8
+#define AI_TURN 16
+#define WIN 0
+#define CONTINUE 1
+#define PLAYER_WINS 2
+#define AI_WINS 3
+#define PLAYER_EOF -1
 
 /*gameplay defines*/
 #define PLAYER_TURN 1
@@ -94,11 +102,12 @@ typedef struct s_board
 /************** prototypes **********/
 /* gameplay.c */
 int		gameplay(t_board *board, int no_ai);
-int	check_win_states(int **cells, int heigth, int width, int player);
-int	is_full(t_board *board);
+int		check_win_states(int **cells, int heigth, int width, int player);
+int		is_full(t_board *board);
+void	print_board(t_board *board);
 
 /* nc_gameplay.c */
-void				make_move(t_board *board, int column, int who);
+void				make_move(int **cells, int heigth, int width, int column, int who);
 void				nc_gameplay(t_board *board, int no_ai);
 void				init(char *envp[]);
 void				finish(void);
@@ -108,7 +117,7 @@ void				ft_sleep(double time);
 size_t				ft_utf_8_strlen(const char *s);
 
 /* ai.c */
-void	ai_move(t_board *board);
+void	ai_move(t_board *board, int parity);
 
 /* printing.c */
 int		print_nc_board(t_board *board, int x, int y, int w, int h, int show_scores,

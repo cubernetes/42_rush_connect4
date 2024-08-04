@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 21:38:30 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 21:47:38 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define PLAYER_TURN 1
-#define AI_TURN 2
-#define WIN 0
-#define CONTINUE 1
-#define PLAYER_WINS 2
-#define AI_WINS 3
-#define PLAYER_EOF -1
-#define VALID 0
-#define INVALID 1
-
 void	print_board(t_board *board)
 {
 	int	i;
 	int	j;
 
-	ft_printf("Current state of the board:\n");
 	for (i = 0; i < board->heigth; i++)
 	{
 		for (j = 0; j < board->width; j++)
-			ft_printf(" %i ", board->cells[i][j]);
+			ft_printf("\033[%sm\033[30m| \033[m", board->cells[i][j] == 0 ? "44" : board->cells[i][j] == PLAYER_TURN ? "41" : "48;5;11");
 		ft_printf("\n");
 	}
 }
@@ -57,7 +46,7 @@ int	check_secondary_diagonal(int **cells, int heigth, int width, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER secondary!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (EXIT_SUCCESS);
 			}
 		}
@@ -82,7 +71,7 @@ int	check_primary_diagonal(int **cells, int heigth, int width, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER diagonal!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -107,7 +96,7 @@ int	check_horizontal(int **cells, int heigth, int width, int player)
 				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER horizontal!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -132,7 +121,7 @@ int	check_vertical(int **cells, int heigth, int width, int player)
 				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER vertical!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -164,95 +153,37 @@ int	is_full(t_board *board)
 	return (EXIT_FAILURE);
 }
 
-int	check_invalid_move(t_board *board, char *input, int *cur_row, int *move, int width)
-{
-	char	*tmp = input;
-		
-	while(tmp && *tmp != '\n')
-	{
-		if (ft_isdigit(*tmp) == 0)
-		{
-			ft_printf("Move must be a digit!\n");
-			return (INVALID);
-		}
-		tmp++;
-	}
-	*move = ft_atoi(input) - 1;
-	while (*move < 0 || *move >= width)
-	{
-		ft_printf("The move is:\n");
-		ft_printf("%s", input);
-		ft_printf("Move must be within board limits!\n");
-		return (INVALID);
-	}
-	*cur_row = board->heigth - 1;
-	while (*cur_row && board->cells[*cur_row][*move] != 0)
-		(*cur_row)--;
-	while (!(*cur_row) && board->cells[*cur_row][*move] != 0)
-	{
-		ft_printf("The move is:\n");
-		ft_printf("%s", input);
-		ft_printf("Find another move!\n");
-		return (INVALID);
-	}
-	return (VALID);
-}
-
 int	player_turn(t_board *board, int player)
 {
 	char	*input;
 	int		cur_row;
 	int		move;
+	int		status;
 
-	cur_row = board->heigth - 1;
-	input = get_next_line(0);
-	if (!input)
+	while (TRUE)
 	{
-		ft_printf("Bye!\n");
-		return (PLAYER_EOF);
-	}
-	while (check_invalid_move(board, input, &cur_row, &move, board->width))
-	{
-		input = get_next_line(0);
-		if (!input)
+		input = get_next_line(STDIN_FILENO);
+		if (input == NULL)
 		{
 			ft_printf("Bye!\n");
 			return (PLAYER_EOF);
 		}
-		move = ft_atoi(input) - 1;
+		move = (int)ft_atol_status(input, &status) - 1;
+		if ((status & 13) == 0 && move >= 0 && move < board->width)
+		{
+			cur_row = board->heigth - 1;
+			while (cur_row >= 0 && board->cells[cur_row][move] != 0)
+				cur_row--;
+			if (cur_row >= 0 && board->cells[cur_row][move] == 0)
+				break ;
+		}
+		if (!ft_strcmp(input, "\n"))
+			ft_printf("Please input something:\n");
+		else
+			ft_printf("Find another move:\n");
 	}
-	if (move < board->width)
-		board->cells[cur_row][move] = player;
+	board->cells[cur_row][move] = player;
 	return (move);
-}
-
-int	rollout(t_board *board);
-
-int	gameplay(t_board *board, int no_ai)
-{
-	int	move;
-
-	(void)no_ai;
-	print_board(board);
-	while (!is_full(board))
-	{
-		ft_printf("Player One's turn:\n");
-		move = player_turn(board, PLAYER_TURN);
-		if (move == PLAYER_EOF)
-			return (EXIT_SUCCESS);
-		print_board(board);
-		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER_TURN))
-			return (PLAYER_WINS);
-		ft_printf("Player Two's turn:\n");
-		move = player_turn(board, AI_TURN);
-		// rollout(board);
-		if (move == PLAYER_EOF)
-			return (EXIT_SUCCESS);
-		print_board(board);
-		if (!check_win_states(board->cells, board->heigth, board->width, AI_TURN))
-			return (AI_WINS);
-	}
-	return (EXIT_FAILURE);
 }
 
 int	init_game_board(t_board *board)
@@ -265,76 +196,36 @@ int	init_game_board(t_board *board)
 	return (EXIT_SUCCESS);
 }
 
+int	gameplay(t_board *board, int no_ai)
+{
+	int	move;
+	int	parity;
 
-
-// int is_terminal_state(t_board *board)
-// {
-// 	if (!check_win_states(board, AI_TURN)
-// 		|| !check_win_states(board, PLAYER_TURN)
-// 		|| is_full(board))
-// 		return (1);
-// 	return (0);
-// }
-
-// int empty_cols(t_board *board, int *avail_cols)
-// {
-// 	int cols;
-// 	int rows;
-// 	int empty = 0;
-	
-// 	for (rows = 0; rows < board->heigth; rows++)
-// 	{
-// 		for (cols = 0; cols < board->width; cols++)
-// 		{
-// 			if (board->cells[rows][cols] == 0 && avail_cols[cols] == 0)
-// 				avail_cols[cols] = 1;
-// 			else if (board->cells[rows][cols] != 0 && avail_cols[cols] != 1)
-// 				avail_cols[cols] = 0;
-// 		}
-// 	}
-// 	for (cols = 0; cols < board->width; cols++)
-// 	{
-// 		if (avail_cols[cols])
-// 			empty++;
-// 	}
-// 	return (empty);
-// }
-
-// #include <time.h>
-
-// int available_moves(t_board *board)
-// {
-// 	srand((unsigned int)time(NULL));
-// 	int *avail_cols;
-// 	int empty = 0;
-// 	int move = -1;
-
-// 	avail_cols = ft_calloc((size_t)board->width, sizeof(int));
-// 	if ((empty = empty_cols(board, avail_cols)))
-// 	{
-// 		move = rand() % empty;
-// 		while (avail_cols[move] == 0)
-// 		{
-// 			move = rand() % board->width;
-// 		}
-// 		return (move);
-// 	}
-// 	return(-1);		
-// }
-
-// int	rollout(t_board *board)
-// {
-// 	// if the visit value is 0, rollout
-// 	int move;
-// 	int row = board->heigth - 1;
-// 	// while (!is_terminal_state(board))
-// 	// {
-// 	// randomly choose available moves
-// 		if ((move = available_moves(board)) > -1)
-// 			while (board->cells[row][move] != 0 && row >= 0)
-// 				row--;
-// 		board->cells[row][move] = AI_TURN;
-// 	// simulate those actions, and reassign the current state
-// 	// }
-// 	return (0);
-// }
+	parity = 0;
+	print_board(board);
+	while (!is_full(board))
+	{
+		ft_printf("Player One's turn:\n");
+		move = player_turn(board, PLAYER_TURN);
+		if (move == PLAYER_EOF)
+			return (EXIT_SUCCESS);
+		print_board(board);
+		if (!check_win_states(board, PLAYER_TURN))
+			return (PLAYER_WINS);
+		parity = (parity + 1) & 1;
+		ft_printf("Player Two's turn:\n");
+		if (no_ai)
+		{
+			move = player_turn(board, AI_TURN);
+			if (move == PLAYER_EOF)
+				return (EXIT_SUCCESS);
+		}
+		else
+			ai_move(board, parity);
+		print_board(board);
+		if (!check_win_states(board, AI_TURN))
+			return (AI_WINS);
+		parity = (parity + 1) & 1;
+	}
+	return (EXIT_FAILURE);
+}

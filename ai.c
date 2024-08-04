@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 19:44:13 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:58:08 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ t_node	*new_node(t_node *parent, int column)
 			for (j = 0; j < parent->state.width; ++j)
 				node->state.board[i][j] = parent->state.board[i][j];
 		}
-		make_move(node->state.board, node->state.heigth, node->state.width, column, AI_MOVE);
 		node->state.ai_turn = !parent->state.ai_turn;
+		make_move(node->state.board, node->state.heigth, node->state.width, column, node->state.ai_turn ? PLAYER1 : PLAYER2); // TODO: logic correct?
 	}
 	else
 		node->state.ai_turn = FALSE;
@@ -146,8 +146,6 @@ void	print_tree(t_node *root)
 	print_tree_with_depth(root, 0);
 }
 
-#include <stdio.h>
-
 t_node	*select(t_node *node)
 {
 	t_node	*best_node;
@@ -173,8 +171,6 @@ t_node	*select(t_node *node)
 			highest_ucb1 = ucb1;
 			best_node = candidate_node;
 		}
-		printf("highest_ucb1: %f\n", highest_ucb1);
-		printf("ucb1: %f\n", ucb1);
 	}
 	return (best_node);
 }
@@ -237,20 +233,17 @@ int	mcts(t_board *board)
 	root->state.width = board->width;
 	i = -1;
 	while (++i < MAX_ITER)
-	{
-		ft_printf("\nIteration %d\nTree:\n", i);
-		print_tree(root);
-		(void)getc(stdin);
 		iterate(root, board->width);
-	}
 	column = select(root)->state.column;
 	return (column);
 }
 
-void	ai_move(t_board *board)
+void	ai_move(t_board *board, int parity)
 {
 	int	column;
 
 	column = mcts(board);
-	make_move(board->cells, board->heigth, board->width, column, AI_MOVE);
+
+	make_move(board->cells, board->heigth, board->width, column,
+		parity ? PLAYER1 : PLAYER2);
 }

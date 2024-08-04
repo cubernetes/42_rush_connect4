@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 19:41:35 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:54:54 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@
 # define BOX_DRAWING_BOTTOM_LEFT "+"
 # define BOX_DRAWING_BOTTOM_RIGHT "+"
 
-# define AI_MOVE 16
-# define PLAYER_MOVE 8
+# define PLAYER1 16
+# define PLAYER2 8
 
 # define BRIGHT 1000
 
-# define MAX_ITER 100
+# define MAX_ITER 10
 
 /* structures */
 typedef struct s_li
@@ -94,7 +94,7 @@ void				ft_sleep(double time);
 size_t				ft_utf_8_strlen(const char *s);
 
 /* ai.c */
-void	ai_move(t_board *board);
+void	ai_move(t_board *board, int parity);
 
 /* printing.c */
 int		print_nc_board(t_board *board, int x, int y, int w, int h, int show_scores,

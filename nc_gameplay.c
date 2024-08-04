@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 19:22:39 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:54:31 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ unsigned long long	get_one_sec(void)
 	time_t						secs2;
 	static unsigned long long	one_sec;
 
-	if ((true))
-		return (0);
 	if (one_sec != 0)
 		return (one_sec);
 	one_sec = 0;
@@ -145,7 +143,7 @@ void	make_move(int **cells, int heigth, int width, int column, int who)
 		cells[row][column] = who;
 }
 
-int	handle_input(t_board *board, int key, int cell_dim)
+int	handle_input(t_board *board, int key, int cell_dim, int parity)
 {
 	MEVENT		mouse_event;
 	int			column;
@@ -154,85 +152,77 @@ int	handle_input(t_board *board, int key, int cell_dim)
 	{
 		if (getmouse(&mouse_event) == OK)
 		{
-			if ((false)) // TODO: Remove
-				mvprintw(0, 0, "(%s, %s)\n", ft_itoa(mouse_event.x),
-					ft_itoa(mouse_event.y));
+			mvprintw(0, 0, "(%s, %s)\n", ft_itoa(mouse_event.x),
+				ft_itoa(mouse_event.y));
 			column = (mouse_event.x
 					- (board->x + board->w / 2
 						- board->width * cell_dim * FONT_ASPECT_RATIO / 2))
 				/ (FONT_ASPECT_RATIO * cell_dim);
-			make_move(board->cells, board->heigth, board->width, column, PLAYER_MOVE);
+			make_move(board->cells, board->heigth, board->width, column, parity ? PLAYER1 : PLAYER2);
 		}
 	}
 	else
 	{
 		/* currently, only mouse is supported. */
 		/* I know, kinda ironic given this is a ncurses program */
-		if (key >= '0' && key <= '9')
-			make_move(board->cells, board->heigth, board->width, key - '0', PLAYER_MOVE);
+		/* if (key >= '0' && key <= '9') */
+			/* make_move(board->cells, board->heigth, board->width, key - '0', PLAYER_MOVE); */
 	}
 	return (TRUE);
 }
 
-int	take_turn(t_board *board, int cell_dim, int *ask_for_input)
+int	take_turn(t_board *board, int cell_dim, int *ask_for_input, int parity)
 {
 	int		key;
 
 	if (*ask_for_input)
 	{
-		ft_printf("\nPLAYER TURN\n");
-		if ((false)) // TODO: Fix
-			key = getch();
-		else
-			key = getc(stdin);
+		key = getch();
 		if (!key || key == 'q' || key == '\x1b' || key == '\x04' || key == -1)
 			return (FALSE);
 		else if (key == KEY_RESIZE || key == '\n')
 		{
 			board->move_failed = FALSE;
-			if ((false)) // TODO: Remove
-				clear();
+			clear();
 			*ask_for_input = !*ask_for_input;
 			return (TRUE);
 		}
-		handle_input(board, key, cell_dim);
+		handle_input(board, key, cell_dim, parity);
 	}
 	else
-	{
-		ft_printf("\nAI TURN\n");
-		ai_move(board);
-	}
+		ai_move(board, parity);
 	return (TRUE);
 }
 
-/* TODO: Implement */
 int	random_boolean(void)
 {
-	return (TRUE);
+	srand((unsigned int)time(NULL));
+	return (rand() % 2);
 }
 
 void	nc_gameplay(t_board *board, int no_ai)
 {
 	int		cell_dim;
 	int		ask_for_input;
+	int		parity;
 
+	parity = 0;
 	ask_for_input = random_boolean();
-	(void)no_ai;
 	board = init_board(board->heigth, board->width, FALSE);
 	while (1)
 	{
 		print_nc_board(board, 0, 9, COLS, LINES - 9, FALSE, &cell_dim);
-		print_board(board);
-		/* refresh(); */
-		/* refresh(); */
+		refresh();
+		refresh();
 		if (no_ai)
 			ask_for_input = TRUE;
-		if (!take_turn(board, cell_dim, &ask_for_input))
+		if (!take_turn(board, cell_dim, &ask_for_input, parity))
 			break ;
 		if (FALSE)
 		{
 			/* print_game_over(board, key); */
 		}
 		ask_for_input = !ask_for_input;
+		parity = (parity + 1) & 1;
 	}
 }

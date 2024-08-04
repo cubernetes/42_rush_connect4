@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 03:52:33 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 13:34:38 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ int	parse_args(int argc, char *argv[], int *heigth, int *width)
 	}
 	if (argc != 2)
 		return (usage(name));
-	*width = (int)ft_atol_status(*argv, &status);
-	if (*width < 7)
+	*heigth = (int)ft_atol_status(*argv, &status);
+	if (*heigth < 6)
 		return (usage(name));
 	if (status & 13)
 		return (usage(name));
 	++argv;
-	*heigth = (int)ft_atol_status(*argv, &status);
-	if (*heigth < 6)
+	*width = (int)ft_atol_status(*argv, &status);
+	if (*width < 7)
 		return (usage(name));
 	if (status & 13)
 		return (usage(name));

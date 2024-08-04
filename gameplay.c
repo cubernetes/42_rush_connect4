@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 22:07:13 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:52:32 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,19 @@ void	print_board(t_board *board)
 	{
 		for (j = 0; j < board->width; j++)
 			ft_printf("\033[%sm\033[30m| \033[m", board->cells[i][j] == 0 ? "44" : board->cells[i][j] == PLAYER1 ? "41" : "48;5;11");
+		ft_printf("\n");
+	}
+}
+
+void	print_board2(int **cells, int heigth, int width)
+{
+	int	i;
+	int	j;
+
+	for (i = 0; i < heigth; i++)
+	{
+		for (j = 0; j < width; j++)
+			ft_printf("\033[%sm\033[30m| \033[m", cells[i][j] == 0 ? "44" : cells[i][j] == PLAYER1 ? "41" : "48;5;11");
 		ft_printf("\n");
 	}
 }

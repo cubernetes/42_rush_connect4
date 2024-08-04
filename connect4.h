@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 22:11:21 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:52:49 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int		gameplay(t_board *board, int no_ai);
 int		check_win_states(int **cells, int heigth, int width, int player, int print);
 int		is_full(t_board *board);
 void	print_board(t_board *board);
+void	print_board2(int **cells, int heigth, int width);
 
 /* nc_gameplay.c */
 void				make_move(int **cells, int heigth, int width, int column, int who);

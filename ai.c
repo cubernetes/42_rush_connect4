@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 22:38:41 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:14:58 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,20 @@ int	is_draw(t_node *node)
 	return (EXIT_FAILURE);
 }
 
+int	is_draw2(int **board, int heigth, int width)
+{
+	int	i;
+	int	j;
+
+	for (i = 0; i < heigth; i++)
+	{
+		for (j = 0; j < width; j++)
+			if (board[i][j] == 0)
+				return (EXIT_SUCCESS);
+	}
+	return (EXIT_FAILURE);
+}
+
 int is_terminal_state(t_node *node, int ai_turn)
 {
 	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER2, FALSE))
@@ -195,6 +209,17 @@ int is_terminal_state(t_node *node, int ai_turn)
 	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER1, FALSE))
 		return (ai_turn ? -1 : 1);
 	if (is_draw(node))
+		return (0);
+	return (-2);
+}
+
+int is_terminal_state2(int **board, int heigth, int width, int ai_turn)
+{
+	if (!check_win_states(board, heigth, width, PLAYER2, FALSE))
+		return (ai_turn ? 1 : -1);
+	if (!check_win_states(board, heigth, width, PLAYER1, FALSE))
+		return (ai_turn ? -1 : 1);
+	if (is_draw2(board, heigth, width))
 		return (0);
 	return (-2);
 }
@@ -301,10 +326,71 @@ int	rollout(t_node *node)
 	return (score);
 }
 
+int	get_random_move(int **board, int heigth, int width)
+{
+	t_list	*free_cols;
+	int		i;
+	int		j;
+	int		has_zero;
+
+	free_cols = lnew();
+	for (i = 0; i < width; ++i)
+	{
+		has_zero = FALSE;
+		for (j = 0; j < heigth; ++j)
+		{
+			if (board[j][i] == 0)
+			{
+				has_zero = TRUE;
+				break ;
+			}
+		}
+		if (has_zero)
+			lpush(free_cols, as_int(i));
+	}
+	if (free_cols->len == 0)
+		return (-1);
+	srand((unsigned int)time(NULL));
+	lrotate(free_cols, rand() % (int)free_cols->len);
+	return (free_cols->first->as_int);
+}
+
+int	rollout_(t_node *node)
+{
+	int		move;
+	int		**new_board;
+	int		parity;
+	int		score;
+	int		i;
+
+	new_board = ft_malloc(sizeof(int *) * (size_t)(node->state.heigth));
+	for (i = 0; i < node->state.heigth; ++i)
+		new_board[i] = ft_calloc((size_t)(node->state.width), sizeof(int));
+	copy_board(node->state.board, new_board, node->state.heigth, node->state.width);
+
+	parity = node->state.ai_turn;
+	while ((score = is_terminal_state2(new_board, node->state.heigth, node->state.width, node->state.ai_turn)) == -2)
+	{
+		move = get_random_move(new_board, node->state.heigth, node->state.width);
+		if (move == -1)
+		{
+			score = 0;
+			break ;
+		}
+		make_move(new_board, node->state.heigth, node->state.width, move, parity ? PLAYER2 : PLAYER1);
+		parity = !parity;
+	}
+	return (score);
+}
+
 void	backprop(t_node *node, int res)
 {
-	(void)node;
-	(void)res;
+	while (node != NULL)
+	{
+		node->state.visits += 1;
+		node->state.total_score += res;
+		node = node->parent;
+	}
 }
 
 /* classic 4-step monte carlo search on trees */
@@ -315,7 +401,7 @@ void	iterate(t_node *root, int max_children)
 
 	node = select_recursively(root, max_children);
 	node = expand(node);
-	/* res = rollout(node); */
+	res = rollout_(node);
 	/* ft_printf("Result of the simulation:%d\n", res); */
 	/* print_tree(root); */
 	/* ft_printf("\n"); */

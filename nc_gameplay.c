@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 03:44:54 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 04:11:25 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -691,9 +691,9 @@ int	max_width(char *lines_str)
 int	print_number_char(int num, int x, int y, int cell_dim, int num_len)
 {
 	if (num_len > FONT_ASPECT_RATIO * cell_dim - 1 || cell_dim - 2 < 0)
-		return (0);
+		return (FALSE);
 	mvprintw(y + cell_dim / 2, x + FONT_ASPECT_RATIO * cell_dim / 2 - num_len / 2, "%d", num);
-	return (1);
+	return (TRUE);
 }
 
 char	*extract_number(char *numbers, int number)
@@ -715,20 +715,20 @@ int	print_numbers_heigth_n(int num, int x, int y, int cell_dim, int heigth, char
 {
 	int		num_len;
 	char	**lines;
-	int		line_idx = -1;
+	int		line_idx;
 	char	*number;
 
+	line_idx = -1;
 	if (cell_dim - 2 < heigth || num > 2147483647) /* ascii art only until 2^30. 2^31-1 will be rounded to 2^30. */
-		return (0);
+		return (FALSE);
 	number = extract_number(numbers, num);
 	num_len = max_width(number);
 	if (num_len > FONT_ASPECT_RATIO * cell_dim - 2)
-		return (0);
+		return (FALSE);
 	lines = ft_split(number, '\n');
 	while (++line_idx < heigth)
 		mvprintw(y + cell_dim / 2 - heigth / 2 + line_idx, x + FONT_ASPECT_RATIO * cell_dim / 2 - num_len / 2, "%s", lines[line_idx]);
-	return (1);
-
+	return (TRUE);
 }
 
 void	fill_inside_cell(int x, int y, int cell_dim)

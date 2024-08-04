@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 23:26:44 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:34:15 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,9 +402,9 @@ void	iterate(t_node *root, int max_children)
 	node = select_recursively(root, max_children);
 	node = expand(node);
 	res = rollout_(node);
-	ft_printf("Result of the simulation:%d\n", res);
-	print_tree(root);
-	ft_printf("\n");
+	/* ft_printf("Result of the simulation:%d\n", res); */
+	/* print_tree(root); */
+	/* ft_printf("\n"); */
 	backprop(node, res);
 }
 

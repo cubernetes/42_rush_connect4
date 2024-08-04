@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 22:11:07 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:39:21 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,6 @@ int	handle_input(t_board *board, int key, int cell_dim, int parity)
 	{
 		if (getmouse(&mouse_event) == OK)
 		{
-			mvprintw(0, 0, "(%s, %s)\n", ft_itoa(mouse_event.x),
-				ft_itoa(mouse_event.y));
 			column = (mouse_event.x
 					- (board->x + board->w / 2
 						- board->width * cell_dim * FONT_ASPECT_RATIO / 2))

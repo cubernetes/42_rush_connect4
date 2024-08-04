@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 01:48:55 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 02:54:24 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,47 +16,44 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define HEIGTH 6
-#define WIDTH 7
 #define PLAYER_TURN 1
 #define AI_TURN 2
 #define WIN 0
 #define CONTINUE 1
 #define PLAYER_WINS 2
 #define AI_WINS 3
+#define PLAYER_EOF -1
 
 
-void print_board(int board[HEIGTH][WIDTH])
+void print_board(int **board, int heigth, int width)
 {
 	int	i;
 	int	j;
 
-	ft_printf("current state of the board:\n");
-	for (i = 0; i < HEIGTH; i++)
+	ft_printf("Current state of the board:\n");
+	for (i = 0; i < heigth; i++)
 	{
-		for (j = 0; j < WIDTH; j++)
+		for (j = 0; j < width; j++)
 			ft_printf(" %i ", board[i][j]);			
 		ft_printf("\n");
 	}
 }
 
-int check_secondary_diagonal(int board[HEIGTH][WIDTH], int player)
+int check_secondary_diagonal(int **board, int player, int heigth, int width)
 {
 	int consec;
 	int	i;
 	int	j;
 	int	k;
 
-	for (i = 0; i < HEIGTH - 3; i++)
+	for (i = 0; i < heigth - 3; i++)
 	{
-		for (j = WIDTH - 1; j > 2; j--)
+		for (j = width - 1; j > 2; j--)
 		{
 			consec = 0;
 			for (k = 0; k < 4; k++)
-			{
 				if (board[i + k][j - k] == player)
 					consec++;
-			}
 			if (consec == 4)
 			{
 				ft_printf("Player %i is the WINNER!\n", player);
@@ -68,23 +65,21 @@ int check_secondary_diagonal(int board[HEIGTH][WIDTH], int player)
 	return (EXIT_FAILURE);	
 }
 
-int check_primary_diagonal(int board[HEIGTH][WIDTH], int player)
+int check_primary_diagonal(int **board, int player, int heigth, int width)
 {
 	int consec;
 	int	i;
 	int	j;
 	int	k;
 
-	for (i = 0; i < HEIGTH - 3; i++)
+	for (i = 0; i < heigth - 3; i++)
 	{
-		for (j = 0; j < WIDTH - 3; j++)
+		for (j = 0; j < width - 3; j++)
 		{
 			consec = 0;
 			for (k = 0; k < 4; k++)
-			{
 				if (board[i + k][j + k] == player)
 					consec++;
-			}
 			if (consec == 4)
 			{
 				ft_printf("Player %i is the WINNER!\n", player);
@@ -96,16 +91,16 @@ int check_primary_diagonal(int board[HEIGTH][WIDTH], int player)
 	return (CONTINUE);
 }
 
-int check_horizontal(int board[HEIGTH][WIDTH], int player)
+int check_horizontal(int **board, int player, int heigth, int width)
 {
 	int consec;
 	int	i;
 	int	j;
 
-	for (i = 0; i < HEIGTH; i++)
+	for (i = 0; i < heigth; i++)
 	{
 		consec = 0;
-		for (j = 1; j < WIDTH; j++)
+		for (j = 1; j < width; j++)
 		{
 			if (board[i][j] == player && board[i][j - 1] == player)
 				consec++;
@@ -118,17 +113,17 @@ int check_horizontal(int board[HEIGTH][WIDTH], int player)
 	}
 	return (CONTINUE);
 }
-int	i;
 
-int check_vertical(int board[HEIGTH][WIDTH], int player)
+int check_vertical(int **board, int player, int heigth, int width)
 {
 	int consec;
+	int i;
 	int	j;
 
-	for (i = 0; i < WIDTH; i++)
+	for (i = 0; i < width; i++)
 	{
 		consec = 0;
-		for (j = 1; j < HEIGTH; j++)
+		for (j = 1; j < heigth; j++)
 		{
 			if (board[j][i] == player && board[j - 1][i] == player)
 				consec++;
@@ -142,106 +137,108 @@ int check_vertical(int board[HEIGTH][WIDTH], int player)
 	return (CONTINUE);
 }
 
-int check_win_states(int board[HEIGTH][WIDTH], int player)
+int check_win_states(int **board, int player, int heigth, int width)
 {
-	if (!check_primary_diagonal(board, player) ||
-		!check_secondary_diagonal(board, player) ||
-		!check_vertical(board, player) ||
-		!check_horizontal(board, player))
+	if (!check_primary_diagonal(board, player, heigth, width) ||
+		!check_secondary_diagonal(board, player, heigth, width) ||
+		!check_vertical(board, player, heigth, width) ||
+		!check_horizontal(board, player, heigth, width))
 		return (WIN);
 	return (CONTINUE);
 }
 
-int is_full(int board[HEIGTH][WIDTH])
+int is_full(int **board, int heigth, int width)
 {
 	int	i;
 	int	j;
 
-	for (i = 0; i < HEIGTH; i++)
+	for (i = 0; i < heigth; i++)
 	{
-		for (j = 0; j < WIDTH; j++)
-		{
+		for (j = 0; j < width; j++)
 			if (board[i][j] == 0)
 				return (EXIT_SUCCESS);			
-		}
 	}
 	return (EXIT_FAILURE);
 }
 
-void check_invalid_move(int board[HEIGTH][WIDTH], int cur_row, int move)
+void check_invalid_move(int **board, int cur_row, int move, int heigth)
 {
 	char *input;
 	while (!cur_row && board[cur_row][move] != 0)
 	{
 		ft_printf("Find another move!\n");
 		input = get_next_line(STDIN_FILENO);
-		ft_printf("The move was\n");
+		ft_printf("The move is:\n");
 		ft_printf("%s", input);
 		move = ft_atoi(input) - 1;
-		cur_row = HEIGTH - 1;
+		cur_row = heigth - 1;
 		while (cur_row && board[cur_row][move] != 0)
 			cur_row--;
 	}
 	return ;
 }
 
-int player_turn(int board[HEIGTH][WIDTH], int player)
+int player_turn(int **board, int player, int heigth, int width)
 {
 	char *input;
-	int cur_row = HEIGTH - 1;
+	int cur_row = heigth - 1;
 	int move;
 	
 	input = get_next_line(0);
 	if (!input)
 	{
 		ft_printf("Bye!\n");
-		return (EXIT_SUCCESS);
+		return (PLAYER_EOF);
 	}
 	ft_printf("The move is:\n");
 	ft_printf("%s", input);
-	// apply move
 	move = ft_atoi(input) - 1;
 	while (cur_row && board[cur_row][move] != 0)
 		cur_row--;
-	check_invalid_move(board, cur_row, move);
-	if (move < WIDTH)
+	check_invalid_move(board, cur_row, move, heigth);
+	if (move < width)
 		board[cur_row][move] = player;
 	return (move);	
 }
 
 
-int gameplay(void)
+int gameplay(int **board, int heigth, int width)
 {
-	int board[HEIGTH][WIDTH] = {0};
-	// int board[HEIGTH][WIDTH] = {{0, 0, 0, 0, 0, 0, 0},
-	// 							{0, 0, 0, 0, 0, 0, 0},
-	// 							{0, 0, 0, 0, 0, 0, 0},
-	// 							{0, 0, 0, 0, 0, 0, 0},
-	// 							{0, 0, 0, 0, 0, 0, 0},
-	// 							{0, 0, 0, 0, 0, 0, 0}};
-	check_win_states(board, PLAYER_TURN);
 	int move;
 
-	print_board(board);
-	while (!is_full(board))
+	print_board(board, heigth, width);
+	while (!is_full(board, heigth, width))
 	{
-		// get player move
 		ft_printf("Player One's turn:\n");
-		move = player_turn(board, PLAYER_TURN);
-		if (move == EXIT_SUCCESS)
+		move = player_turn(board, PLAYER_TURN, heigth, width);
+		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
-		print_board(board);
-		if (!check_win_states(board, PLAYER_TURN))
+		print_board(board, heigth, width);
+		if (!check_win_states(board, PLAYER_TURN, heigth, width))
 			return (PLAYER_WINS);
 		ft_printf("Player Two's turn:\n");
-		// get ai turn (or player 2)
-		move = player_turn(board, AI_TURN);
-		if (move == EXIT_SUCCESS)
+		move = player_turn(board, AI_TURN, heigth, width);
+		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
-		print_board(board);	
-		if (!check_win_states(board, AI_TURN))
+		print_board(board, heigth, width);	
+		if (!check_win_states(board, AI_TURN, heigth, width))
 			return (AI_WINS);
 	}
 	return (EXIT_FAILURE);
 }
 
+int init_game_board(char **argv, int ***board, int *height, int *width)
+{
+	int i;
+	int j;
+	*height = ft_atoi(argv[1]);
+	*width = ft_atoi(argv[2]);
+	*board = ft_malloc(sizeof(int *) * *height);
+	for (i = 0; i < *height; i++)
+	{
+		(*board)[i] = ft_malloc(sizeof(int) * *width);
+		for (j = 0; j < *width; j++)
+			(*board)[i][j] = 0;
+	}
+	return (EXIT_SUCCESS);
+}

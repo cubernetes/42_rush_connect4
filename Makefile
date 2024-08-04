@@ -110,11 +110,20 @@ re: fclean
 # You can pass arguments like this: make run ARGS="hello ' to this world ! ' ."
 run:
 	@printf '\n'
-	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
+	@PATH=".$${PATH:+:$${PATH}}" && \
+		$(NAME) $(ARGS)
 
 valrun:
 	@printf '\n'
-	@PATH=".$${PATH:+:$${PATH}}" && valgrind --suppressions=nc.supp --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes $(NAME) $(ARGS)
+	@PATH=".$${PATH:+:$${PATH}}" && \
+		valgrind \
+			--suppressions=nc.supp \
+			--leak-check=full \
+			--show-leak-kinds=all \
+			--track-origins=yes \
+			--track-fds=yes \
+			$(NAME) \
+			$(ARGS)
 
 rerun: re
 	@$(MAKE) run
@@ -124,11 +133,11 @@ l leakcheck: re
 
 # - memset and bzero can be ignored from nm (they are added by compiler)
 # - write and read are from libft
-# - malloc, free, rand, srand, time are from mandatory part
+# - malloc, free, rand, srand, time are from the mandatory part of the subject
 # - noecho, keypad, initscr, ..., set_escdelay are from ncursesw
 # - setlocale is technically forbidden since it's not from ncurses*, but
-#   there's otherwise no way to make UTF8 work! so it's needed by us
-# - __* are added by cc
+#   there's otherwise no way to make UTF8 work! so it's definitely needed by us
+# - functions starting with __* are added by the compiler
 forbidden-funcs-internal:
 	@printf '\n'
 	@$(NM) -u $(NAME)      | \
@@ -177,8 +186,13 @@ fl forbidden-funcs-leakcheck: leakcheck
 	@$(MAKE) forbidden-funcs-internal
 
 # these targets are not files
-.PHONY: all clean fclean re run rerun leakcheck
+.PHONY: all clean fclean re
 .PHONY: libft
+.PHONY: run rerun
+.PHONY: l leakcheck
+.PHONY: f forbidden-funcs
+.PHONY: forbidden-funcs-internal
+.PHONY: fl forbidden-funcs-leakcheck
 
 # keep intermediate (*.h, *.o, *.d, *.a) targets
 .SECONDARY:

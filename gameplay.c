@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 22:52:32 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:33:33 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ int	is_full(t_board *board)
 			if (board->cells[i][j] == 0)
 				return (EXIT_SUCCESS);
 	}
+	ft_printf("It's a draw!\n");
 	return (EXIT_FAILURE);
 }
 

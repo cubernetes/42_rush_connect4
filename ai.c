@@ -6,34 +6,13 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 21:48:21 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:57:38 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "connect4.h"
 #include "libft.h"
 #include <float.h>
-
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-/* TODO: maybe change back to char**? */
-typedef struct s_state
-{
-	int		**board;
-	int		heigth;
-	int		width;
-	int		total_score;
-	int		visits;
-	int		ai_turn;
-	int		column;
-}	t_state;
-
-typedef struct s_node
-{
-	struct s_node	*parent;
-	t_list			*children;
-	t_state			state;
-}	t_node;
 
 /* https://gist.github.com/LingDong-/7e4c4cae5cbbc44400a05fba65f06f23 */
 float	ln(float x)
@@ -337,6 +316,7 @@ int	mcts(t_board *board)
 	i = -1;
 	while (++i < MAX_ITER)
 		iterate(root, board->width);
+	print_tree(root);
 	column = select(root)->state.column;
 	return (column);
 }

@@ -6,16 +6,18 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 21:50:12 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:56:07 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONNECT4_H
 # define CONNECT4_H	1
 
+# include "libft.h"
+
 # include <stddef.h>
-#include <time.h>
-#include <stdlib.h>
+# include <time.h>
+# include <stdlib.h>
 
 /* defines */
 # define FALSE 0
@@ -39,17 +41,39 @@
 
 # define MAX_ITER 10
 
-#define PLAYER_TURN 1
-#define AI_TURN 2
-#define WIN 0
-#define CONTINUE 1
-#define PLAYER_WINS 2
-#define AI_WINS 3
-#define PLAYER_EOF -1
-#define VALID 0
-#define INVALID 1
+# define PLAYER_TURN 1
+# define AI_TURN 2
+# define WIN 0
+# define CONTINUE 1
+# define PLAYER_WINS 2
+# define AI_WINS 3
+# define PLAYER_EOF -1
+# define VALID 0
+# define INVALID 1
+
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 /* structures */
+
+/* TODO: maybe change back to char**? */
+typedef struct s_state
+{
+	int		**board;
+	int		heigth;
+	int		width;
+	int		total_score;
+	int		visits;
+	int		ai_turn;
+	int		column;
+}	t_state;
+
+typedef struct s_node
+{
+	struct s_node	*parent;
+	t_list			*children;
+	t_state			state;
+}	t_node;
+
 typedef struct s_li
 {
 	unsigned int	time;
@@ -109,6 +133,7 @@ size_t				ft_utf_8_strlen(const char *s);
 
 /* ai.c */
 void	ai_move(t_board *board, int parity);
+void	print_tree(t_node *root);
 
 /* printing.c */
 int		print_nc_board(t_board *board, int x, int y, int w, int h, int show_scores,

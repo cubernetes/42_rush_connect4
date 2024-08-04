@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 02:13:56 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:28:07 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,11 +209,12 @@ int	player_turn(int board[HEIGTH][WIDTH], int player)
 	return (move);
 }
 
-int	gameplay(void)
+int	gameplay(int no_ai)
 {
 	int	move;
 	int	board[HEIGTH][WIDTH] = {0};
 
+	(void)no_ai;
 	check_win_states(board, PLAYER_TURN);
 	print_board(board);
 	while (!is_full(board))

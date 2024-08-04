@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 02:03:35 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:28:22 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ typedef struct s_board
 /* prototypes */
 void	init(char *envp[]);
 void	finish(void);
-void	nc_gameplay(void);
-int		gameplay(void);
+void	nc_gameplay(int no_ai);
+int		gameplay(int no_ai);
 
 /* fonts */
 # define SMALL_GAME_OVER \

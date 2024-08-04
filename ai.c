@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 23:34:15 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:36:09 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,11 +216,11 @@ int is_terminal_state(t_node *node, int ai_turn)
 int is_terminal_state2(int **board, int heigth, int width, int ai_turn)
 {
 	if (!check_win_states(board, heigth, width, PLAYER2, FALSE))
-		return (ai_turn ? 1 : 0);
+		return (ai_turn ? 2 : 0);
 	if (!check_win_states(board, heigth, width, PLAYER1, FALSE))
-		return (ai_turn ? 0 : 1);
+		return (ai_turn ? 0 : 2);
 	if (is_draw2(board, heigth, width))
-		return (0);
+		return (1);
 	return (-2);
 }
 

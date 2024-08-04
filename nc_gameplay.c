@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 02:28:03 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:20:37 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1027,14 +1027,15 @@ int	handle_input(t_board *board, int key, int cell_dim)
 	return (TRUE);
 }
 
-void	nc_gameplay(int no_ai)
+void	nc_gameplay(int **_board, int heigth, int width, int no_ai)
 {
 	t_board	*board;
 	int		key;
 	int		cell_dim;
 
+	(void)_board;
 	(void)no_ai;
-	board = init_board(5, 8, FALSE);
+	board = init_board(heigth, width, FALSE);
 	print_nc_board(board, 0, 9, COLS, LINES - 9, FALSE, &cell_dim);
 	mousemask(ALL_MOUSE_EVENTS, NULL);
 	key = getch();

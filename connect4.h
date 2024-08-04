@@ -6,12 +6,14 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 03:44:24 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 16:36:00 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONNECT4_H
 # define CONNECT4_H	1
+
+# include <stddef.h>
 
 /* defines */
 # define FALSE 0
@@ -28,7 +30,12 @@
 # define BOX_DRAWING_BOTTOM_LEFT "+"
 # define BOX_DRAWING_BOTTOM_RIGHT "+"
 
+# define AI_MOVE 16
+# define PLAYER_MOVE 8
+
 # define BRIGHT 1000
+
+# define MAX_ITER 1000
 
 /* structures */
 typedef struct s_li
@@ -71,12 +78,31 @@ typedef struct s_board
 	int					h;
 }	t_board;
 
-/* prototypes */
-void	init(char *envp[]);
-void	finish(void);
-int		init_game_board(t_board *board);
-void	nc_gameplay(t_board *board, int no_ai);
+/************** prototypes **********/
+/* gameplay.c */
 int		gameplay(t_board *board, int no_ai);
+
+/* nc_gameplay.c */
+void				make_move(t_board *board, int column, int who);
+void				nc_gameplay(t_board *board, int no_ai);
+void				init(char *envp[]);
+void				finish(void);
+unsigned long long	get_one_sec(void);
+unsigned int		get_inc(char **envp);
+void				ft_sleep(double time);
+size_t				ft_utf_8_strlen(const char *s);
+
+/* ai.c */
+void	ai_move(t_board *board);
+
+/* printing.c */
+int		print_nc_board(t_board *board, int x, int y, int w, int h, int show_scores,
+	int *cell_dim);
+void	init_colors(void);
+
+/* board_logic.c */
+int		init_game_board(t_board *board);
+t_board	*init_board(int heigth, int width, int pre_fill);
 
 /* fonts */
 # define SMALL_GAME_OVER \

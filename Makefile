@@ -66,6 +66,9 @@ vpath %.c src
 SRC += main.c
 SRC += gameplay.c
 SRC += nc_gameplay.c
+SRC += ai.c
+SRC += board_logic.c
+SRC += printing.c
 
 # objects
 OBJ := $(SRC:.c=.o)

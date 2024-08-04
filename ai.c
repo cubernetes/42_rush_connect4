@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 22:08:29 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:38:41 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,13 +188,15 @@ int	is_draw(t_node *node)
 	return (EXIT_FAILURE);
 }
 
-int is_terminal_state(t_node *node)
+int is_terminal_state(t_node *node, int ai_turn)
 {
-	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER2, FALSE)
-		|| !check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER1, FALSE)
-		|| is_draw(node))
-		return (1);
-	return (0);
+	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER2, FALSE))
+		return (ai_turn ? 1 : -1);
+	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER1, FALSE))
+		return (ai_turn ? -1 : 1);
+	if (is_draw(node))
+		return (0);
+	return (-2);
 }
 
 int empty_cols(t_node *node, int *avail_cols)
@@ -236,7 +238,7 @@ int available_moves(t_node *node, int *avail_cols)
 			move = rand() % node->state.width;
 		return (move);
 	}
-	return(-1);		
+	return (-1);		
 }
 
 void	copy_board(int **board, int **copied_board, int heigth, int width)
@@ -261,26 +263,42 @@ int	rollout(t_node *node)
 	int *avail_cols;
 	int **new_board;
 	int	i;
+	int	score;
 	
 	avail_cols = ft_calloc((size_t)node->state.width, sizeof(int));
-
 	new_board = ft_malloc(sizeof(int *) * (size_t)(node->state.heigth));
 	for (i = 0; i < node->state.heigth; ++i)
 		new_board[i] = ft_calloc((size_t)(node->state.width), sizeof(int));
 	copy_board(node->state.board, new_board, node->state.heigth, node->state.width);
 	// loop while not terminal state
-	while (!is_terminal_state(node))
+	while ((score = is_terminal_state(node, node->state.ai_turn)) == -2)
 	{
 	// randomly choose available moves
 		if ((move = available_moves(node, avail_cols)) > -1)
-			while (node->state.board[row][move] != 0 && row >= 0)
+			while (row >= 0 && node->state.board[row][move] != 0)
 				row--;
 		else
-			break;
-		node->state.board[row][move] = PLAYER2;
+			break ;
+		if (row >= 0 && node->state.board[row][move] == 0)
+			node->state.board[row][move] = PLAYER2;
+		else
+		{
+				int j;
+
+				for (i = 0; i < node->state.heigth; i++)
+				{
+					for (j = 0; j < node->state.width; j++)
+						ft_printf("\033[%sm\033[30m| \033[m", node->state.board[i][j] == 0 ? "44" : node->state.board[i][j] == PLAYER1 ? "41" : "48;5;11");
+					ft_printf("\n");
+				}
+			if (row >= 0)
+				ft_printf("ERROR: %d, row:%d, cell:%d\n", move, row, node->state.board[row][move]);
+			else
+				ft_printf("ERROR: %d, row:%d\n", move, row);
+		}
 	// simulate those actions, and reassign the current state
 	}
-	return (0);
+	return (score);
 }
 
 void	backprop(t_node *node, int res)
@@ -297,7 +315,10 @@ void	iterate(t_node *root, int max_children)
 
 	node = select_recursively(root, max_children);
 	node = expand(node);
-	// res = rollout(node);
+	/* res = rollout(node); */
+	/* ft_printf("Result of the simulation:%d\n", res); */
+	/* print_tree(root); */
+	/* ft_printf("\n"); */
 	backprop(node, res);
 }
 
@@ -316,7 +337,6 @@ int	mcts(t_board *board)
 	i = -1;
 	while (++i < MAX_ITER)
 		iterate(root, board->width);
-	/* print_tree(root); */
 	column = select(root)->state.column;
 	return (column);
 }
@@ -326,7 +346,6 @@ void	ai_move(t_board *board, int parity)
 	int	column;
 
 	column = mcts(board);
-
 	make_move(board->cells, board->heigth, board->width, column,
 		parity ? PLAYER2 : PLAYER1);
 }

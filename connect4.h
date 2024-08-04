@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 20:54:54 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:24:11 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@
 # define BRIGHT 1000
 
 # define MAX_ITER 10
+
+#define PLAYER_TURN 1
+#define AI_TURN 2
+#define WIN 0
+#define CONTINUE 1
+#define PLAYER_WINS 2
+#define AI_WINS 3
+#define PLAYER_EOF -1
 
 /* structures */
 typedef struct s_li

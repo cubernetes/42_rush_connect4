@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 21:56:07 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:11:21 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@
 
 # define MAX_ITER 10
 
-# define PLAYER_TURN 1
-# define AI_TURN 2
 # define WIN 0
 # define CONTINUE 1
 # define PLAYER_WINS 2
@@ -117,13 +115,13 @@ typedef struct s_board
 /************** prototypes **********/
 /* gameplay.c */
 int		gameplay(t_board *board, int no_ai);
-int		check_win_states(int **cells, int heigth, int width, int player);
+int		check_win_states(int **cells, int heigth, int width, int player, int print);
 int		is_full(t_board *board);
 void	print_board(t_board *board);
 
 /* nc_gameplay.c */
 void				make_move(int **cells, int heigth, int width, int column, int who);
-void				nc_gameplay(t_board *board, int no_ai);
+int					nc_gameplay(t_board *board, int no_ai);
 void				init(char *envp[]);
 void				finish(void);
 unsigned long long	get_one_sec(void);

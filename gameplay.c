@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 21:54:50 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:07:13 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void	print_board(t_board *board)
 	for (i = 0; i < board->heigth; i++)
 	{
 		for (j = 0; j < board->width; j++)
-			ft_printf("\033[%sm\033[30m| \033[m", board->cells[i][j] == 0 ? "44" : board->cells[i][j] == PLAYER_TURN ? "41" : "48;5;11");
+			ft_printf("\033[%sm\033[30m| \033[m", board->cells[i][j] == 0 ? "44" : board->cells[i][j] == PLAYER1 ? "41" : "48;5;11");
 		ft_printf("\n");
 	}
 }
 
-int	check_secondary_diagonal(int **cells, int heigth, int width, int player)
+int	check_secondary_diagonal(int **cells, int heigth, int width, int player, int print)
 {
 	int	consec;
 	int	i;
@@ -46,7 +46,8 @@ int	check_secondary_diagonal(int **cells, int heigth, int width, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
+				if (print)
+					ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER1 ? "41" : "48;5;11");
 				return (EXIT_SUCCESS);
 			}
 		}
@@ -54,7 +55,7 @@ int	check_secondary_diagonal(int **cells, int heigth, int width, int player)
 	return (EXIT_FAILURE);
 }
 
-int	check_primary_diagonal(int **cells, int heigth, int width, int player)
+int	check_primary_diagonal(int **cells, int heigth, int width, int player, int print)
 {
 	int	consec;
 	int	i;
@@ -71,7 +72,8 @@ int	check_primary_diagonal(int **cells, int heigth, int width, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
+				if (print)
+					ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER1 ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -79,7 +81,7 @@ int	check_primary_diagonal(int **cells, int heigth, int width, int player)
 	return (CONTINUE);
 }
 
-int	check_horizontal(int **cells, int heigth, int width, int player)
+int	check_horizontal(int **cells, int heigth, int width, int player, int print)
 {
 	int	consec;
 	int	i;
@@ -96,7 +98,8 @@ int	check_horizontal(int **cells, int heigth, int width, int player)
 				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
+				if (print)
+					ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER1 ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -104,7 +107,7 @@ int	check_horizontal(int **cells, int heigth, int width, int player)
 	return (CONTINUE);
 }
 
-int	check_vertical(int **cells, int heigth, int width, int player)
+int	check_vertical(int **cells, int heigth, int width, int player, int print)
 {
 	int	consec;
 	int	i;
@@ -121,7 +124,8 @@ int	check_vertical(int **cells, int heigth, int width, int player)
 				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
+				if (print)
+					ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER1 ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -129,12 +133,12 @@ int	check_vertical(int **cells, int heigth, int width, int player)
 	return (CONTINUE);
 }
 
-int	check_win_states(int **cells, int heigth, int width, int player)
+int	check_win_states(int **cells, int heigth, int width, int player, int print)
 {
-	if (!check_primary_diagonal(cells, heigth, width, player)
-		|| !check_secondary_diagonal(cells, heigth, width, player)
-		|| !check_vertical(cells, heigth, width, player)
-		|| !check_horizontal(cells, heigth, width, player))
+	if (!check_primary_diagonal(cells, heigth, width, player, print)
+		|| !check_secondary_diagonal(cells, heigth, width, player, print)
+		|| !check_vertical(cells, heigth, width, player, print)
+		|| !check_horizontal(cells, heigth, width, player, print))
 		return (WIN);
 	return (CONTINUE);
 }
@@ -206,24 +210,24 @@ int	gameplay(t_board *board, int no_ai)
 	while (!is_full(board))
 	{
 		ft_printf("Player One's turn:\n");
-		move = player_turn(board, PLAYER_TURN);
+		move = player_turn(board, PLAYER1);
 		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
 		print_board(board);
-		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER1, TRUE))
 			return (PLAYER_WINS);
 		parity = (parity + 1) & 1;
 		ft_printf("Player Two's turn:\n");
 		if (no_ai)
 		{
-			move = player_turn(board, AI_TURN);
+			move = player_turn(board, PLAYER2);
 			if (move == PLAYER_EOF)
 				return (EXIT_SUCCESS);
 		}
 		else
 			ai_move(board, parity);
 		print_board(board);
-		if (!check_win_states(board->cells, board->heigth, board->width, AI_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER2, TRUE))
 			return (AI_WINS);
 		parity = (parity + 1) & 1;
 	}

@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 20:54:31 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:11:07 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int	handle_input(t_board *board, int key, int cell_dim, int parity)
 					- (board->x + board->w / 2
 						- board->width * cell_dim * FONT_ASPECT_RATIO / 2))
 				/ (FONT_ASPECT_RATIO * cell_dim);
-			make_move(board->cells, board->heigth, board->width, column, parity ? PLAYER1 : PLAYER2);
+			make_move(board->cells, board->heigth, board->width, column, parity ? PLAYER2 : PLAYER1);
 		}
 	}
 	else
@@ -191,6 +191,8 @@ int	take_turn(t_board *board, int cell_dim, int *ask_for_input, int parity)
 	}
 	else
 		ai_move(board, parity);
+	if (!check_win_states(board->cells, board->heigth, board->width, parity ? PLAYER2 : PLAYER1, FALSE))
+		return (FALSE);
 	return (TRUE);
 }
 
@@ -200,7 +202,7 @@ int	random_boolean(void)
 	return (rand() % 2);
 }
 
-void	nc_gameplay(t_board *board, int no_ai)
+int	nc_gameplay(t_board *board, int no_ai)
 {
 	int		cell_dim;
 	int		ask_for_input;
@@ -217,7 +219,11 @@ void	nc_gameplay(t_board *board, int no_ai)
 		if (no_ai)
 			ask_for_input = TRUE;
 		if (!take_turn(board, cell_dim, &ask_for_input, parity))
-			break ;
+		{
+			if (!check_win_states(board->cells, board->heigth, board->width, parity ? PLAYER2 : PLAYER1, FALSE))
+				return (parity ? PLAYER2 : PLAYER1);
+			return (0);
+		}
 		if (FALSE)
 		{
 			/* print_game_over(board, key); */

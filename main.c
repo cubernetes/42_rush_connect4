@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 20:50:33 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:13:44 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,10 @@ int	main(int argc, char *argv[], char *envp[])
 	else
 	{
 		init(envp);
-		nc_gameplay(&board, no_ai);
+		res = nc_gameplay(&board, no_ai);
 		finish();
+		if (res)
+			ft_printf("Player \033[%sm  \033[m won!\n", res == PLAYER1 ? "41" : "48;5;11");
 	}
 	gc_free_all();
 	return (EXIT_SUCCESS);

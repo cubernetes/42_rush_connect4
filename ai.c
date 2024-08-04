@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 21:57:38 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 22:08:29 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,8 +190,8 @@ int	is_draw(t_node *node)
 
 int is_terminal_state(t_node *node)
 {
-	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, AI_TURN)
-		|| !check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER_TURN)
+	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER2, FALSE)
+		|| !check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER1, FALSE)
 		|| is_draw(node))
 		return (1);
 	return (0);
@@ -277,7 +277,7 @@ int	rollout(t_node *node)
 				row--;
 		else
 			break;
-		node->state.board[row][move] = AI_TURN;
+		node->state.board[row][move] = PLAYER2;
 	// simulate those actions, and reassign the current state
 	}
 	return (0);
@@ -316,7 +316,7 @@ int	mcts(t_board *board)
 	i = -1;
 	while (++i < MAX_ITER)
 		iterate(root, board->width);
-	print_tree(root);
+	/* print_tree(root); */
 	column = select(root)->state.column;
 	return (column);
 }
@@ -328,5 +328,5 @@ void	ai_move(t_board *board, int parity)
 	column = mcts(board);
 
 	make_move(board->cells, board->heigth, board->width, column,
-		parity ? PLAYER1 : PLAYER2);
+		parity ? PLAYER2 : PLAYER1);
 }

@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 01:37:49 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:01:37 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <locale.h> /* forbidden header */
 #include <stdlib.h>
 #include <ncurses.h>
+#include <time.h>
 
 void	outputArray(int *arr, int size)
 {
@@ -994,6 +995,7 @@ int	print_nc_board(t_board *board, int x, int y, int w, int h, bool show_scores,
 	else
 		*cell_dim = board->h / board->height;
 	print_borders(board, *cell_dim);
+	(void)show_scores;
 	/* if (show_scores) */
 		/* print_scores(board); */
 	return (print_numbers(board, *cell_dim));
@@ -1029,9 +1031,6 @@ void	nc_gameplay(void)
 {
 	t_board	*board;
 	int		key;
-	int		dim;
-	t_pos	pos1;
-	t_pos	pos2;
 	int		cell_dim;
 
 	board = init_board(5, 8, FALSE);

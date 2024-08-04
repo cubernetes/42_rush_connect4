@@ -19,6 +19,7 @@ CFLAGS += -pedantic
 CFLAGS += -Wconversion
 CFLAGS += -Wunreachable-code
 CFLAGS += -Wshadow
+CFLAGS += -std=c11
 
 CPPFLAGS :=
 CPPFLAGS += -MD

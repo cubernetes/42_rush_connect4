@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 21:47:38 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:49:56 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int	gameplay(t_board *board, int no_ai)
 		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
 		print_board(board);
-		if (!check_win_states(board, PLAYER_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER_TURN))
 			return (PLAYER_WINS);
 		parity = (parity + 1) & 1;
 		ft_printf("Player Two's turn:\n");
@@ -223,7 +223,7 @@ int	gameplay(t_board *board, int no_ai)
 		else
 			ai_move(board, parity);
 		print_board(board);
-		if (!check_win_states(board, AI_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, AI_TURN))
 			return (AI_WINS);
 		parity = (parity + 1) & 1;
 	}

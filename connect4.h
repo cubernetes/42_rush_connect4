@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 22:52:49 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:21:59 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 
 # define BRIGHT 1000
 
-# define MAX_ITER 10
+# define MAX_ITER 1000
 
 # define WIN 0
 # define CONTINUE 1

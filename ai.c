@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:02:46 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 23:14:58 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 23:21:15 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,9 +205,9 @@ int	is_draw2(int **board, int heigth, int width)
 int is_terminal_state(t_node *node, int ai_turn)
 {
 	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER2, FALSE))
-		return (ai_turn ? 1 : -1);
+		return (ai_turn ? 1 : 0);
 	if (!check_win_states(node->state.board, node->state.heigth, node->state.width, PLAYER1, FALSE))
-		return (ai_turn ? -1 : 1);
+		return (ai_turn ? 0 : 1);
 	if (is_draw(node))
 		return (0);
 	return (-2);
@@ -216,9 +216,9 @@ int is_terminal_state(t_node *node, int ai_turn)
 int is_terminal_state2(int **board, int heigth, int width, int ai_turn)
 {
 	if (!check_win_states(board, heigth, width, PLAYER2, FALSE))
-		return (ai_turn ? 1 : -1);
+		return (ai_turn ? 1 : 0);
 	if (!check_win_states(board, heigth, width, PLAYER1, FALSE))
-		return (ai_turn ? -1 : 1);
+		return (ai_turn ? 0 : 1);
 	if (is_draw2(board, heigth, width))
 		return (0);
 	return (-2);

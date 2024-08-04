@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 16:36:00 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:28:49 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define CONNECT4_H	1
 
 # include <stddef.h>
+#include <time.h>
+#include <stdlib.h>
 
 /* defines */
 # define FALSE 0
@@ -36,6 +38,17 @@
 # define BRIGHT 1000
 
 # define MAX_ITER 1000
+
+/*gameplay defines*/
+#define PLAYER_TURN 1
+#define AI_TURN 2
+#define WIN 0
+#define CONTINUE 1
+#define PLAYER_WINS 2
+#define AI_WINS 3
+#define PLAYER_EOF -1
+#define VALID 0
+#define INVALID 1
 
 /* structures */
 typedef struct s_li
@@ -81,6 +94,8 @@ typedef struct s_board
 /************** prototypes **********/
 /* gameplay.c */
 int		gameplay(t_board *board, int no_ai);
+int	check_win_states(int **cells, int heigth, int width, int player);
+int	is_full(t_board *board);
 
 /* nc_gameplay.c */
 void				make_move(t_board *board, int column, int who);

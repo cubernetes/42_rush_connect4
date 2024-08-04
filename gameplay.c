@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 14:48:21 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/04 21:38:30 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,24 @@ void	print_board(t_board *board)
 	}
 }
 
-int	check_secondary_diagonal(t_board *board, int player)
+int	check_secondary_diagonal(int **cells, int heigth, int width, int player)
 {
 	int	consec;
 	int	i;
 	int	j;
 	int	k;
 
-	for (i = 0; i < board->heigth - 3; i++)
+	for (i = 0; i < heigth - 3; i++)
 	{
-		for (j = board->width - 1; j > 2; j--)
+		for (j = width - 1; j > 2; j--)
 		{
 			consec = 0;
 			for (k = 0; k < 4; k++)
-				if (board->cells[i + k][j - k] == player)
+				if (cells[i + k][j - k] == player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player %i is the WINNER secondary!\n", player);
 				return (EXIT_SUCCESS);
 			}
 		}
@@ -65,24 +65,24 @@ int	check_secondary_diagonal(t_board *board, int player)
 	return (EXIT_FAILURE);
 }
 
-int	check_primary_diagonal(t_board *board, int player)
+int	check_primary_diagonal(int **cells, int heigth, int width, int player)
 {
 	int	consec;
 	int	i;
 	int	j;
 	int	k;
 
-	for (i = 0; i < board->heigth - 3; i++)
+	for (i = 0; i < heigth - 3; i++)
 	{
-		for (j = 0; j < board->width - 3; j++)
+		for (j = 0; j < width - 3; j++)
 		{
 			consec = 0;
 			for (k = 0; k < 4; k++)
-				if (board->cells[i + k][j + k] == player)
+				if (cells[i + k][j + k] == player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player %i is the WINNER diagonal!\n", player);
 				return (WIN);
 			}
 		}
@@ -90,22 +90,24 @@ int	check_primary_diagonal(t_board *board, int player)
 	return (CONTINUE);
 }
 
-int	check_horizontal(t_board *board, int player)
+int	check_horizontal(int **cells, int heigth, int width, int player)
 {
 	int	consec;
 	int	i;
 	int	j;
 
-	for (i = 0; i < board->heigth; i++)
+	for (i = 0; i < heigth; i++)
 	{
 		consec = 0;
-		for (j = 1; j < board->width; j++)
+		for (j = 1; j < width; j++)
 		{
-			if (board->cells[i][j] == player && board->cells[i][j - 1] == player)
+			if (cells[i][j] == player && cells[i][j - 1] == player)
 				consec++;
+			else
+				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player %i is the WINNER horizontal!\n", player);
 				return (WIN);
 			}
 		}
@@ -113,22 +115,24 @@ int	check_horizontal(t_board *board, int player)
 	return (CONTINUE);
 }
 
-int	check_vertical(t_board *board, int player)
+int	check_vertical(int **cells, int heigth, int width, int player)
 {
 	int	consec;
 	int	i;
 	int	j;
 
-	for (i = 0; i < board->width; i++)
+	for (i = 0; i < width; i++)
 	{
 		consec = 0;
-		for (j = 1; j < board->heigth; j++)
+		for (j = 1; j < heigth; j++)
 		{
-			if (board->cells[j][i] == player && board->cells[j - 1][i] == player)
+			if (cells[j][i] == player && cells[j - 1][i] == player)
 				consec++;
+			else
+				consec = 0;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player %i is the WINNER vertical!\n", player);
 				return (WIN);
 			}
 		}
@@ -136,12 +140,12 @@ int	check_vertical(t_board *board, int player)
 	return (CONTINUE);
 }
 
-int	check_win_states(t_board *board, int player)
+int	check_win_states(int **cells, int heigth, int width, int player)
 {
-	if (!check_primary_diagonal(board, player)
-		|| !check_secondary_diagonal(board, player)
-		|| !check_vertical(board, player)
-		|| !check_horizontal(board, player))
+	if (!check_primary_diagonal(cells, heigth, width, player)
+		|| !check_secondary_diagonal(cells, heigth, width, player)
+		|| !check_vertical(cells, heigth, width, player)
+		|| !check_horizontal(cells, heigth, width, player))
 		return (WIN);
 	return (CONTINUE);
 }
@@ -222,6 +226,8 @@ int	player_turn(t_board *board, int player)
 	return (move);
 }
 
+int	rollout(t_board *board);
+
 int	gameplay(t_board *board, int no_ai)
 {
 	int	move;
@@ -235,14 +241,15 @@ int	gameplay(t_board *board, int no_ai)
 		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
 		print_board(board);
-		if (!check_win_states(board, PLAYER_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, PLAYER_TURN))
 			return (PLAYER_WINS);
 		ft_printf("Player Two's turn:\n");
 		move = player_turn(board, AI_TURN);
+		// rollout(board);
 		if (move == PLAYER_EOF)
 			return (EXIT_SUCCESS);
 		print_board(board);
-		if (!check_win_states(board, AI_TURN))
+		if (!check_win_states(board->cells, board->heigth, board->width, AI_TURN))
 			return (AI_WINS);
 	}
 	return (EXIT_FAILURE);
@@ -257,3 +264,77 @@ int	init_game_board(t_board *board)
 		board->cells[i] = ft_calloc((size_t)(board->width), sizeof(int));
 	return (EXIT_SUCCESS);
 }
+
+
+
+// int is_terminal_state(t_board *board)
+// {
+// 	if (!check_win_states(board, AI_TURN)
+// 		|| !check_win_states(board, PLAYER_TURN)
+// 		|| is_full(board))
+// 		return (1);
+// 	return (0);
+// }
+
+// int empty_cols(t_board *board, int *avail_cols)
+// {
+// 	int cols;
+// 	int rows;
+// 	int empty = 0;
+	
+// 	for (rows = 0; rows < board->heigth; rows++)
+// 	{
+// 		for (cols = 0; cols < board->width; cols++)
+// 		{
+// 			if (board->cells[rows][cols] == 0 && avail_cols[cols] == 0)
+// 				avail_cols[cols] = 1;
+// 			else if (board->cells[rows][cols] != 0 && avail_cols[cols] != 1)
+// 				avail_cols[cols] = 0;
+// 		}
+// 	}
+// 	for (cols = 0; cols < board->width; cols++)
+// 	{
+// 		if (avail_cols[cols])
+// 			empty++;
+// 	}
+// 	return (empty);
+// }
+
+// #include <time.h>
+
+// int available_moves(t_board *board)
+// {
+// 	srand((unsigned int)time(NULL));
+// 	int *avail_cols;
+// 	int empty = 0;
+// 	int move = -1;
+
+// 	avail_cols = ft_calloc((size_t)board->width, sizeof(int));
+// 	if ((empty = empty_cols(board, avail_cols)))
+// 	{
+// 		move = rand() % empty;
+// 		while (avail_cols[move] == 0)
+// 		{
+// 			move = rand() % board->width;
+// 		}
+// 		return (move);
+// 	}
+// 	return(-1);		
+// }
+
+// int	rollout(t_board *board)
+// {
+// 	// if the visit value is 0, rollout
+// 	int move;
+// 	int row = board->heigth - 1;
+// 	// while (!is_terminal_state(board))
+// 	// {
+// 	// randomly choose available moves
+// 		if ((move = available_moves(board)) > -1)
+// 			while (board->cells[row][move] != 0 && row >= 0)
+// 				row--;
+// 		board->cells[row][move] = AI_TURN;
+// 	// simulate those actions, and reassign the current state
+// 	// }
+// 	return (0);
+// }

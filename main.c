@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 03:31:10 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:52:33 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 int	usage(char *name)
 {
 	ft_printf("Usage: %s [--no-ai] [--no-fancy] ROWS COLS\n"
-		"ROWS must be bigger than or equal to 6\n",
-		"COLS must be bigger than or equal to 7\n",
+		"\tROWS must at least 6\n"
+		"\tCOLS must at least 7\n",
 		name);
 	return (-1);
 }
@@ -66,12 +66,12 @@ int	parse_args(int argc, char *argv[], int *heigth, int *width)
 /* TODO: free as often as possible */
 int	main(int argc, char *argv[], char *envp[])
 {
-	int	**board;
-	int	res;
-	int	no_ai;
-	int	no_fancy;
-	int	width;
-	int	heigth;
+	t_board	board;
+	int		res;
+	int		no_ai;
+	int		no_fancy;
+	int		width;
+	int		heigth;
 
 	(void)argc;
 	(void)argv;
@@ -81,13 +81,15 @@ int	main(int argc, char *argv[], char *envp[])
 		return (gc_free_all(), EXIT_FAILURE);
 	no_ai = res & 1;
 	no_fancy = res & 2;
-	init_game_board(&board, heigth, width);
+	board.width = width;
+	board.heigth = heigth;
+	init_game_board(&board);
 	if (no_fancy)
-		(void)gameplay(board, heigth, width, no_ai);
+		(void)gameplay(&board, no_ai);
 	else
 	{
 		init(envp);
-		nc_gameplay(board, heigth, width, no_ai);
+		nc_gameplay(&board, no_ai);
 		finish();
 	}
 	gc_free_all();

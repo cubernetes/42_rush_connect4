@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 03:23:13 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:44:24 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_pos
 typedef struct s_board
 {
 	int					width;
-	int					height;
+	int					heigth;
 	int					**cells;
 	int					**prev_cells;
 	int					zero_amount;
@@ -74,9 +74,9 @@ typedef struct s_board
 /* prototypes */
 void	init(char *envp[]);
 void	finish(void);
-int		init_game_board(int ***board, int height, int width);
-void	nc_gameplay(int **board, int height, int width, int no_ai);
-int		gameplay(int **board, int height, int width, int no_ai);
+int		init_game_board(t_board *board);
+void	nc_gameplay(t_board *board, int no_ai);
+int		gameplay(t_board *board, int no_ai);
 
 /* fonts */
 # define SMALL_GAME_OVER \

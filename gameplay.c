@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 21:24:08 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:38:55 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,10 @@ void	print_board(t_board *board)
 	int	i;
 	int	j;
 
-	ft_printf("Current state of the board:\n");
 	for (i = 0; i < board->heigth; i++)
 	{
 		for (j = 0; j < board->width; j++)
-			ft_printf(" %i ", board->cells[i][j]);
+			ft_printf("\033[%sm\033[30m| \033[m", board->cells[i][j] == 0 ? "44" : board->cells[i][j] == PLAYER_TURN ? "41" : "48;5;11");
 		ft_printf("\n");
 	}
 }
@@ -47,7 +46,7 @@ int	check_secondary_diagonal(t_board *board, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (EXIT_SUCCESS);
 			}
 		}
@@ -72,7 +71,7 @@ int	check_primary_diagonal(t_board *board, int player)
 					consec++;
 			if (consec == 4)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -95,7 +94,7 @@ int	check_horizontal(t_board *board, int player)
 				consec++;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -118,7 +117,7 @@ int	check_vertical(t_board *board, int player)
 				consec++;
 			if (consec == 3)
 			{
-				ft_printf("Player %i is the WINNER!\n", player);
+				ft_printf("Player \033[%sm  \033[m is the WINNER!\n", player == PLAYER_TURN ? "41" : "48;5;11");
 				return (WIN);
 			}
 		}
@@ -183,11 +182,22 @@ int	player_turn(t_board *board, int player)
 	return (move);
 }
 
+int	init_game_board(t_board *board)
+{
+	int	i;
+
+	board->cells = ft_malloc(sizeof(int *) * (size_t)(board->heigth));
+	for (i = 0; i < board->heigth; ++i)
+		board->cells[i] = ft_calloc((size_t)(board->width), sizeof(int));
+	return (EXIT_SUCCESS);
+}
+
 int	gameplay(t_board *board, int no_ai)
 {
 	int	move;
+	int	parity;
 
-	(void)no_ai;
+	parity = 0;
 	print_board(board);
 	while (!is_full(board))
 	{
@@ -198,23 +208,20 @@ int	gameplay(t_board *board, int no_ai)
 		print_board(board);
 		if (!check_win_states(board, PLAYER_TURN))
 			return (PLAYER_WINS);
+		parity = (parity + 1) & 1;
 		ft_printf("Player Two's turn:\n");
-		move = player_turn(board, AI_TURN);
-		if (move == PLAYER_EOF)
-			return (EXIT_SUCCESS);
+		if (no_ai)
+		{
+			move = player_turn(board, AI_TURN);
+			if (move == PLAYER_EOF)
+				return (EXIT_SUCCESS);
+		}
+		else
+			ai_move(board, parity);
 		print_board(board);
 		if (!check_win_states(board, AI_TURN))
 			return (AI_WINS);
+		parity = (parity + 1) & 1;
 	}
 	return (EXIT_FAILURE);
-}
-
-int	init_game_board(t_board *board)
-{
-	int	i;
-
-	board->cells = ft_malloc(sizeof(int *) * (size_t)(board->heigth));
-	for (i = 0; i < board->heigth; ++i)
-		board->cells[i] = ft_calloc((size_t)(board->width), sizeof(int));
-	return (EXIT_SUCCESS);
 }

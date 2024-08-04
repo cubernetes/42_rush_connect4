@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 00:56:34 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/04 03:51:36 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:48:21 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #define PLAYER_WINS 2
 #define AI_WINS 3
 #define PLAYER_EOF -1
+#define VALID 0
+#define INVALID 1
 
 void	print_board(t_board *board)
 {
@@ -58,7 +60,6 @@ int	check_secondary_diagonal(t_board *board, int player)
 				ft_printf("Player %i is the WINNER!\n", player);
 				return (EXIT_SUCCESS);
 			}
-			ft_printf("i = %i, j = %i\n", i, j);
 		}
 	}
 	return (EXIT_FAILURE);
@@ -84,7 +85,6 @@ int	check_primary_diagonal(t_board *board, int player)
 				ft_printf("Player %i is the WINNER!\n", player);
 				return (WIN);
 			}
-			ft_printf("i = %i, j = %i\n", i, j);
 		}
 	}
 	return (CONTINUE);
@@ -160,22 +160,38 @@ int	is_full(t_board *board)
 	return (EXIT_FAILURE);
 }
 
-void	check_invalid_move(t_board *board, int cur_row, int move)
+int	check_invalid_move(t_board *board, char *input, int *cur_row, int *move, int width)
 {
-	char	*input;
-
-	while (!cur_row && board->cells[cur_row][move] != 0)
+	char	*tmp = input;
+		
+	while(tmp && *tmp != '\n')
 	{
-		ft_printf("Find another move!\n");
-		input = get_next_line(STDIN_FILENO);
+		if (ft_isdigit(*tmp) == 0)
+		{
+			ft_printf("Move must be a digit!\n");
+			return (INVALID);
+		}
+		tmp++;
+	}
+	*move = ft_atoi(input) - 1;
+	while (*move < 0 || *move >= width)
+	{
 		ft_printf("The move is:\n");
 		ft_printf("%s", input);
-		move = ft_atoi(input) - 1;
-		cur_row = board->heigth - 1;
-		while (cur_row && board->cells[cur_row][move] != 0)
-			cur_row--;
+		ft_printf("Move must be within board limits!\n");
+		return (INVALID);
 	}
-	return ;
+	*cur_row = board->heigth - 1;
+	while (*cur_row && board->cells[*cur_row][*move] != 0)
+		(*cur_row)--;
+	while (!(*cur_row) && board->cells[*cur_row][*move] != 0)
+	{
+		ft_printf("The move is:\n");
+		ft_printf("%s", input);
+		ft_printf("Find another move!\n");
+		return (INVALID);
+	}
+	return (VALID);
 }
 
 int	player_turn(t_board *board, int player)
@@ -191,12 +207,16 @@ int	player_turn(t_board *board, int player)
 		ft_printf("Bye!\n");
 		return (PLAYER_EOF);
 	}
-	ft_printf("The move is:\n");
-	ft_printf("%s", input);
-	move = ft_atoi(input) - 1;
-	while (cur_row && board->cells[cur_row][move] != 0)
-		cur_row--;
-	check_invalid_move(board, cur_row, move);
+	while (check_invalid_move(board, input, &cur_row, &move, board->width))
+	{
+		input = get_next_line(0);
+		if (!input)
+		{
+			ft_printf("Bye!\n");
+			return (PLAYER_EOF);
+		}
+		move = ft_atoi(input) - 1;
+	}
 	if (move < board->width)
 		board->cells[cur_row][move] = player;
 	return (move);

@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 19:35:18 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 16:36:00 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:41:35 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 
 # define BRIGHT 1000
 
-# define MAX_ITER 1000
+# define MAX_ITER 100
 
 /* structures */
 typedef struct s_li
@@ -81,9 +81,10 @@ typedef struct s_board
 /************** prototypes **********/
 /* gameplay.c */
 int		gameplay(t_board *board, int no_ai);
+void	print_board(t_board *board);
 
 /* nc_gameplay.c */
-void				make_move(t_board *board, int column, int who);
+void				make_move(int **cells, int heigth, int width, int column, int who);
 void				nc_gameplay(t_board *board, int no_ai);
 void				init(char *envp[]);
 void				finish(void);

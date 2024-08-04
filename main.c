@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 17:30:41 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 13:34:38 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 18:55:56 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	main(int argc, char *argv[], char *envp[])
 	int		heigth;
 
 	(void)argc;
-	(void)argv;
+	(void)argv; // TODO: Remove (void) stuff
+	(void)envp;
 	(void)set_allocator(gc_malloc);
 	(void)gc_set_context("GAME");
 	if (((res = parse_args(argc, argv, &heigth, &width)) == -1))
@@ -88,9 +89,9 @@ int	main(int argc, char *argv[], char *envp[])
 		(void)gameplay(&board, no_ai);
 	else
 	{
-		init(envp);
+		/* init(envp); */
 		nc_gameplay(&board, no_ai);
-		finish();
+		/* finish(); */
 	}
 	gc_free_all();
 	return (EXIT_SUCCESS);

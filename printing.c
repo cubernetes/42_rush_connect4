@@ -6,7 +6,7 @@
 /*   By: tischmid <tischmid@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:05:44 by tischmid          #+#    #+#             */
-/*   Updated: 2024/08/04 14:29:02 by tischmid         ###   ########.fr       */
+/*   Updated: 2024/08/04 18:56:59 by tischmid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,6 +448,8 @@ int	print_nc_board(t_board *board, int x, int y, int w, int h, int show_scores, 
 		*cell_dim = board->w / (FONT_ASPECT_RATIO * board->width);
 	else
 		*cell_dim = board->h / board->heigth;
+	if ((true)) // TODO: Remove
+		return (EXIT_SUCCESS);
 	print_borders(board, *cell_dim);
 	(void)show_scores;
 	/* if (show_scores) */
